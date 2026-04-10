@@ -1,0 +1,3102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZV Records — Production Co.</title>
+  <meta name="description" content="ZV Production Co. Records — Sello discográfico profesional. Artistas, lanzamientos y estudio de grabación." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <style>
+    :root {
+      --zv-black:   #0D0D0D;
+      --zv-dark:    #111111;
+      --zv-card:    #1A1A1A;
+      --zv-border:  #2A2A2A;
+      --zv-cyan:    #00E5FF;
+      --zv-magenta: #FF00B4;
+      --zv-white:   #F0F0F0;
+      --zv-muted:   #888888;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Syne', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--zv-black);
+      color: var(--zv-white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: inherit; text-decoration: none; -webkit-touch-callout: none; }
+    * { min-width: 0; }
+    button { -webkit-touch-callout: none; }
+
+    /* ===== NAVBAR ===== */
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 72px;
+      background: rgba(13,13,13,0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .site-nav.scrolled {
+      background: rgba(13,13,13,0.92);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-logo-img {
+      width: 40px; height: 40px; border-radius: 8px;
+      object-fit: cover; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-logo-text {
+      font-family: var(--font-display); font-size: 1.4rem; line-height: 1;
+      letter-spacing: 0.05em;
+    }
+    .logo-z-sm { color: var(--zv-cyan); }
+    .logo-v-sm { color: var(--zv-magenta); }
+
+    .nav-center {
+      list-style: none; display: flex; gap: 0.25rem; align-items: center;
+      background: rgba(255,255,255,0.04); border-radius: 100px;
+      padding: 4px;
+    }
+    .nav-center a {
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+      color: var(--zv-muted); transition: all 0.25s;
+      padding: 0.5rem 1.1rem; border-radius: 100px;
+      letter-spacing: 0.02em;
+    }
+    .nav-center a:hover {
+      color: var(--zv-white); background: rgba(255,255,255,0.08);
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    /* Language Switcher */
+    .lang-switcher {
+      position: relative; display: flex; align-items: center;
+    }
+    .lang-btn {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--zv-white); font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.1em; padding: 0.45rem 0.8rem; border-radius: 6px;
+      cursor: pointer; display: flex; align-items: center; gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { border-color: var(--zv-cyan); color: var(--zv-cyan); }
+    .lang-btn svg { width: 14px; height: 14px; opacity: 0.6; }
+    .lang-dropdown {
+      display: none; position: absolute; top: calc(100% + 8px); right: 0;
+      background: rgba(20,20,20,0.98); backdrop-filter: blur(20px);
+      border: 1px solid var(--zv-border); border-radius: 8px;
+      min-width: 140px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+    .lang-dropdown.open { display: block; }
+    .lang-option {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 1rem; cursor: pointer;
+      font-family: var(--font-body); font-size: 0.8rem; color: var(--zv-muted);
+      transition: all 0.15s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .lang-option:hover { background: rgba(255,255,255,0.06); color: var(--zv-white); }
+    .lang-option.active { color: var(--zv-cyan); }
+    .lang-flag { font-size: 1.1rem; }
+
+    .nav-cta-btn {
+      color: var(--zv-black); background: var(--zv-cyan);
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 700;
+      padding: 0.55rem 1.4rem; border-radius: 100px; border: none;
+      cursor: pointer; transition: all 0.25s; letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-cta-btn:hover { background: var(--zv-magenta); color: var(--zv-white); transform: scale(1.03); }
+
+    .nav-hamburger {
+      display: none; background: none; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--zv-white); width: 44px; height: 44px; border-radius: 8px;
+      font-size: 1.2rem; cursor: pointer; transition: border-color 0.2s;
+    }
+    .nav-hamburger:hover { border-color: var(--zv-cyan); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none; position: fixed; top: 72px; left: 0; right: 0; bottom: 0;
+      background: rgba(13,13,13,0.97); backdrop-filter: blur(24px);
+      z-index: 99; flex-direction: column; align-items: center;
+      justify-content: center; gap: 1.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-display); font-size: 2.5rem;
+      color: var(--zv-white); transition: color 0.2s; letter-spacing: 0.05em;
+    }
+    .mobile-menu a:hover { color: var(--zv-cyan); }
+
+    /* ===== HERO — CANVAS SCROLL SEQUENCE ===== */
+    .s-hero {
+      position: relative; height: 500vh;
+    }
+    .hero-pin {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 20%, var(--zv-black) 85%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.5rem; text-align: center; padding: 0 1.5rem;
+    }
+    .hero-logo { display: flex; align-items: baseline; gap: 0; }
+    .logo-z, .logo-v {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 18vw, 14rem);
+      line-height: 0.85; letter-spacing: -0.02em;
+    }
+    .logo-z { color: var(--zv-cyan); text-shadow: 0 0 60px rgba(0,229,255,0.4); }
+    .logo-v { color: var(--zv-magenta); text-shadow: 0 0 60px rgba(255,0,180,0.4); margin-left: -0.05em; }
+    .logo-sub {
+      font-family: var(--font-mono); font-size: clamp(0.45rem, 1.1vw, 0.7rem);
+      letter-spacing: 0.35em; color: var(--zv-muted); margin-top: 0.5rem;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--zv-white); opacity: 0.7; font-weight: 300;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0.4;
+    }
+    .scroll-hint span {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.4em; color: var(--zv-cyan);
+    }
+    .scroll-line {
+      width: 1px; height: 50px; background: var(--zv-cyan); opacity: 0.5;
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.3); }
+    }
+
+    /* ===== STUDIO ===== */
+    .s-studio { position: relative; }
+    .studio-hero {
+      position: relative; height: 100vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .studio-bg {
+      position: absolute; inset: 0; background-size: cover;
+      background-position: center; filter: brightness(0.35);
+    }
+    .studio-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, var(--zv-black) 0%, transparent 30%, transparent 70%, var(--zv-black) 100%);
+    }
+    .studio-text {
+      position: relative; z-index: 2; text-align: center; padding: 2rem;
+    }
+    .studio-label {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      letter-spacing: 0.4em; color: var(--zv-cyan); margin-bottom: 1rem;
+    }
+    .studio-heading {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 7rem); line-height: 0.95;
+    }
+    .studio-body {
+      max-width: 520px; margin: 1.5rem auto 0;
+      color: var(--zv-muted); line-height: 1.7; font-size: 0.95rem;
+    }
+
+    /* Channels / Booths Grid */
+    .channels-section {
+      position: relative; z-index: 2; padding: 5rem 2rem 6rem;
+      background: var(--zv-black);
+    }
+    .channels-header {
+      text-align: center; margin-bottom: 3rem;
+    }
+    .channels-header h3 {
+      font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: 0.02em;
+    }
+    .channels-header p {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.3em; color: var(--zv-cyan); margin-bottom: 0.75rem;
+    }
+    .channels-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem; max-width: 1200px; margin: 0 auto;
+    }
+    .channel-card {
+      position: relative; border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--zv-border); aspect-ratio: 3/4;
+      cursor: pointer; transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+    }
+    .channel-card:hover {
+      border-color: var(--zv-cyan); transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,229,255,0.12), 0 0 80px rgba(0,229,255,0.05);
+    }
+    .channel-card-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.5) saturate(0.8); transition: filter 0.6s, transform 0.6s;
+    }
+    .channel-card:hover .channel-card-img {
+      filter: brightness(0.75) saturate(1.1); transform: scale(1.08);
+    }
+    .channel-card-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem; z-index: 2;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+    }
+    .channel-flag { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
+    .channel-name {
+      font-family: var(--font-display); font-size: 1.6rem;
+      letter-spacing: 0.04em; margin-bottom: 0.3rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+    .channel-genre {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.25em; color: var(--zv-cyan);
+    }
+    .channel-tag {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.2em;
+      color: var(--zv-black); background: var(--zv-cyan);
+      padding: 0.2rem 0.6rem; border-radius: 2px; font-weight: 700;
+      box-shadow: 0 2px 12px rgba(0,229,255,0.3);
+    }
+    /* Platform icons row */
+    .channel-platforms {
+      display: flex; gap: 6px; margin-top: 10px;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .channel-card:hover .channel-platforms {
+      opacity: 1; transform: translateY(0);
+    }
+    .channel-platform-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .channel-platform-icon:hover {
+      transform: scale(1.2);
+    }
+    /* Glow line on hover */
+    .channel-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 3;
+    }
+    .channel-card:hover::after { transform: scaleX(1); }
+
+    /* ===== SECTIONS COMMON ===== */
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.4em; color: var(--zv-cyan);
+      display: block; margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 5rem); letter-spacing: 0.02em;
+    }
+    .text-cyan { color: var(--zv-cyan); }
+    .text-magenta { color: var(--zv-magenta); }
+
+    /* ===== ARTISTAS ===== */
+    .s-artistas { padding: 6rem 0; }
+    .s-artistas .section-header { padding: 0 2rem; margin-bottom: 3rem; }
+
+    /* Featured artist — hero-style full width */
+    .artist-featured {
+      position: relative; width: 100%; height: 70vh; min-height: 480px;
+      overflow: hidden; cursor: pointer;
+    }
+    .artist-featured img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.5); transition: filter 0.6s, transform 0.6s;
+    }
+    .artist-featured:hover img { filter: brightness(0.65); transform: scale(1.03); }
+    .artist-featured-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 3rem 4rem; z-index: 2;
+    }
+    .artist-featured-tag {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.35em; color: var(--zv-cyan); margin-bottom: 0.75rem; display: block;
+    }
+    .artist-featured-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 7rem); line-height: 0.9;
+      letter-spacing: -0.01em; margin-bottom: 0.75rem;
+    }
+    .artist-featured-bio {
+      font-size: 1rem; color: var(--zv-muted); max-width: 500px; line-height: 1.7;
+    }
+    .artist-featured-links {
+      display: flex; gap: 0.75rem; margin-top: 1.5rem;
+    }
+    .artist-featured-links a {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.15); color: var(--zv-white);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 0.85rem;
+      backdrop-filter: blur(12px); background: rgba(255,255,255,0.06);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .artist-featured-links a svg {
+      width: 24px; height: 24px;
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .artist-featured-links a:hover {
+      transform: scale(1.15) translateY(-4px);
+      border-color: var(--zv-cyan);
+      background: rgba(0,229,255,0.1);
+      box-shadow: 0 8px 30px rgba(0,229,255,0.2);
+    }
+    .artist-featured-links a:hover svg {
+      transform: scale(1.1);
+      filter: brightness(1.3);
+    }
+    .artist-featured-number {
+      position: absolute; top: 2rem; right: 3rem;
+      font-family: var(--font-display); font-size: clamp(5rem, 15vw, 12rem);
+      color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none;
+    }
+
+    /* Artist row — horizontal cards */
+    .artists-row {
+      display: flex; gap: 0; width: 100%; overflow: hidden;
+    }
+    .artist-row-card {
+      flex: 1; position: relative; min-height: 400px;
+      overflow: hidden; cursor: pointer;
+      border-right: 1px solid var(--zv-border);
+      transition: flex 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .artist-row-card:last-child { border-right: none; }
+    .artist-row-card:hover { flex: 1.8; }
+    .artist-row-card img {
+      width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;
+      filter: brightness(0.45) grayscale(0.3);
+      transition: filter 0.5s, transform 0.5s;
+    }
+    .artist-row-card:hover img { filter: brightness(0.6) grayscale(0); transform: scale(1.05); }
+    .artist-row-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2rem; z-index: 2;
+    }
+    .artist-row-genre {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.3em; color: var(--zv-magenta); display: block; margin-bottom: 0.4rem;
+    }
+    .artist-row-name {
+      font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.2rem);
+      letter-spacing: 0.02em; margin-bottom: 0.4rem;
+    }
+    .artist-row-bio {
+      font-size: 0.8rem; color: var(--zv-muted); line-height: 1.5;
+      opacity: 0; max-height: 0; overflow: hidden;
+      transition: opacity 0.4s, max-height 0.4s;
+    }
+    .artist-row-card:hover .artist-row-bio { opacity: 1; max-height: 80px; }
+    .artist-row-num {
+      position: absolute; top: 1.5rem; left: 1.5rem;
+      font-family: var(--font-display); font-size: 3rem;
+      color: rgba(255,255,255,0.06); line-height: 1;
+    }
+
+    /* ===== LANZAMIENTOS ===== */
+    .s-lanzamientos { padding: 6rem 2rem 4rem; background: var(--zv-dark); }
+    .s-lanzamientos > * { max-width: 1400px; margin-left: auto; margin-right: auto; }
+
+    /* Featured release — full-width hero overlay card */
+    .release-featured {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--zv-border);
+      min-height: 420px;
+      cursor: pointer;
+      transition: border-color 0.4s, box-shadow 0.4s;
+      /* Horizontal padding handled by parent wrapper */
+    }
+    .release-featured:hover {
+      border-color: rgba(255,0,180,0.3);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 40px rgba(255,0,180,0.06);
+    }
+    .release-featured-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.35) saturate(0.8);
+      transition: filter 0.6s, transform 0.8s;
+    }
+    .release-featured:hover .release-featured-bg {
+      filter: brightness(0.45) saturate(1);
+      transform: scale(1.05);
+    }
+    .release-featured-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%,
+        rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%);
+      z-index: 1;
+    }
+    .release-featured-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      min-height: 420px;
+      gap: 1.5rem;
+    }
+    /* Cover art — vinyl style with shadow */
+    .release-featured-cover {
+      width: 220px; height: 220px;
+      border-radius: 14px; overflow: hidden;
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 0 40px rgba(255,0,180,0.08);
+      flex-shrink: 0;
+      position: relative;
+      transition: transform 0.5s;
+    }
+    .release-featured:hover .release-featured-cover { transform: translateY(-6px) scale(1.03); }
+    .release-featured-cover img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    /* Now playing indicator */
+    .release-featured-playing {
+      position: absolute; bottom: 0.75rem; left: 0.75rem;
+      display: flex; align-items: flex-end; gap: 3px;
+      padding: 0.3rem 0.6rem; border-radius: 4px;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    }
+    .eq-bar {
+      width: 3px; border-radius: 2px;
+      background: var(--zv-magenta);
+      animation: eqBounce 0.8s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .eq-bar:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+    .eq-bar:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+    .eq-bar:nth-child(4) { height: 16px; animation-delay: 0.1s; }
+    .eq-bar:nth-child(5) { height: 6px; animation-delay: 0.25s; }
+    @keyframes eqBounce {
+      0% { height: 4px; }
+      100% { height: 18px; }
+    }
+
+    .release-featured-info {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .release-featured-badge {
+      font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.3em;
+      color: var(--zv-black); background: var(--zv-magenta);
+      padding: 0.3rem 0.8rem; border-radius: 3px; display: inline-block;
+      width: fit-content; margin-bottom: 1.25rem; font-weight: 700;
+      box-shadow: 0 0 20px rgba(255,0,180,0.3);
+    }
+    .release-featured-title {
+      font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem);
+      letter-spacing: 0.02em; margin-bottom: 0.5rem; line-height: 0.95;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+    .release-featured-artist {
+      font-size: 1.05rem; color: rgba(255,255,255,0.6);
+      margin-bottom: 0.15rem; font-weight: 600;
+    }
+    .release-featured-date {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: var(--zv-cyan); letter-spacing: 0.15em; margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+    .release-featured-platforms { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+    .platform-btn {
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
+      padding: 0.6rem 1.3rem; border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.12); color: var(--zv-white);
+      transition: all 0.25s; cursor: pointer; text-decoration: none;
+      backdrop-filter: blur(10px); background: rgba(255,255,255,0.05);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .platform-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+    .platform-btn.primary {
+      background: var(--zv-cyan); color: var(--zv-black);
+      border-color: var(--zv-cyan); font-weight: 700;
+      box-shadow: 0 0 20px rgba(0,229,255,0.2);
+    }
+    .platform-btn.primary:hover {
+      background: var(--zv-magenta); border-color: var(--zv-magenta); color: #fff;
+      box-shadow: 0 0 20px rgba(255,0,180,0.3);
+      transform: translateY(-2px);
+    }
+    .platform-btn svg { width: 14px; height: 14px; vertical-align: middle; }
+    .platform-btn.primary svg { fill: var(--zv-black); }
+    .platform-btn.primary:hover svg { fill: #fff; }
+
+    /* Number watermark on featured */
+    .release-featured-number {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display); font-size: 18rem;
+      color: rgba(255,255,255,0.02); line-height: 1;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* Releases grid — visual cards with cover prominent */
+    .releases-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem; max-width: 1400px; margin: 0 auto 4rem;
+    }
+    .release-card {
+      position: relative;
+      background: var(--zv-card); border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--zv-border);
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .release-card:hover {
+      border-color: var(--zv-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .release-card-cover {
+      position: relative; aspect-ratio: 1; overflow: hidden;
+    }
+    .release-card-cover img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s;
+    }
+    .release-card:hover .release-card-cover img { transform: scale(1.08); }
+    .release-card-cover .release-card-badge {
+      position: absolute; top: 0.6rem; left: 0.6rem;
+      font-family: var(--font-mono); font-size: 0.45rem; letter-spacing: 0.2em;
+      color: var(--zv-black); background: var(--zv-magenta);
+      padding: 0.2rem 0.5rem; border-radius: 2px; font-weight: 700;
+    }
+    .release-card-info { padding: 0.85rem 1rem; }
+    .release-card-title {
+      font-family: var(--font-display); font-size: 1.05rem;
+      letter-spacing: 0.02em; margin-bottom: 0.2rem; line-height: 1.1;
+    }
+    .release-card-artist {
+      font-size: 0.7rem; color: var(--zv-muted);
+      font-family: var(--font-mono); letter-spacing: 0.05em;
+    }
+
+    /* UPCOMING — Countdown */
+    .upcoming-section {
+      max-width: 1400px; margin: 0 auto;
+      border-top: 1px solid var(--zv-border); padding-top: 3rem;
+    }
+    .upcoming-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .upcoming-header h3 {
+      font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.2rem);
+    }
+    .upcoming-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.3em; color: var(--zv-cyan);
+    }
+    .upcoming-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .upcoming-card {
+      background: var(--zv-card); border: 1px solid var(--zv-border);
+      border-radius: 12px; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .upcoming-card:hover { border-color: var(--zv-cyan); }
+    .upcoming-card-top {
+      position: relative; aspect-ratio: 16/7; overflow: hidden;
+    }
+    .upcoming-card-top img {
+      width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5);
+    }
+    .upcoming-card-top .upcoming-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.25em;
+      background: var(--zv-cyan); color: var(--zv-black); font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 2px;
+    }
+    .upcoming-card-body { padding: 1.25rem; }
+    .upcoming-card-title {
+      font-family: var(--font-display); font-size: 1.4rem;
+      margin-bottom: 0.2rem;
+    }
+    .upcoming-card-artist { font-size: 0.8rem; color: var(--zv-muted); margin-bottom: 1rem; }
+    .countdown {
+      display: flex; gap: 0.75rem;
+    }
+    .countdown-item {
+      text-align: center; background: var(--zv-black);
+      border: 1px solid var(--zv-border); border-radius: 8px;
+      padding: 0.6rem 0.9rem; min-width: 58px;
+    }
+    .countdown-num {
+      font-family: var(--font-display); font-size: 1.6rem;
+      color: var(--zv-cyan); display: block; line-height: 1;
+    }
+    .countdown-label {
+      font-family: var(--font-mono); font-size: 0.45rem;
+      letter-spacing: 0.2em; color: var(--zv-muted); margin-top: 0.2rem; display: block;
+    }
+
+    /* ===== VIDEOS ===== */
+    .s-videos { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; overflow: hidden; }
+    .videos-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .video-card {
+      position: relative; overflow: hidden; cursor: pointer;
+      border-radius: 16px;
+      border: 1px solid var(--zv-border);
+      background: var(--zv-card);
+      transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+    }
+    .video-card:hover {
+      border-color: var(--zv-cyan);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,229,255,0.08);
+      transform: translateY(-4px);
+    }
+    /* First video spans full width — featured */
+    .video-card:first-child {
+      grid-column: 1 / -1;
+    }
+    .video-card:first-child .video-thumb { aspect-ratio: 21/9; }
+    .video-card:first-child .video-title { font-size: 2.5rem; }
+    .video-card:first-child .video-play svg { width: 72px; height: 72px; }
+    .video-card:first-child .video-info { padding: 2rem 2.5rem; }
+
+    .video-thumb {
+      position: relative; overflow: hidden; background: var(--zv-dark);
+      aspect-ratio: 16/9;
+    }
+    .video-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s;
+      display: block;
+      filter: brightness(0.7) saturate(0.8);
+    }
+    .video-card:hover .video-thumb img {
+      transform: scale(1.08);
+      filter: brightness(0.85) saturate(1.1);
+    }
+    .video-play {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s; color: var(--zv-white);
+    }
+    .video-play svg {
+      width: 56px; height: 56px;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+      transition: transform 0.3s;
+    }
+    .video-card:hover .video-play { opacity: 1; }
+    .video-card:hover .video-play svg { transform: scale(1.15); }
+    .video-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem 1.75rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+      z-index: 2;
+    }
+    .video-label {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.3em; color: var(--zv-cyan); display: block; margin-bottom: 0.4rem;
+    }
+    .video-title {
+      font-family: var(--font-display); font-size: 1.6rem;
+      letter-spacing: 0.02em; margin-bottom: 0.3rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+    .video-meta { font-size: 0.8rem; color: var(--zv-muted); }
+    /* Glow line bottom on hover */
+    .video-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 3;
+    }
+    .video-card:hover::after { transform: scaleX(1); }
+
+    /* Video Modal */
+    .video-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.95); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .video-modal.active { display: flex; }
+    .modal-inner { position: relative; width: min(900px, 92vw); }
+    .modal-close {
+      position: absolute; top: -2.5rem; right: 0;
+      background: none; border: none; color: var(--zv-white);
+      font-size: 1.5rem; cursor: pointer; opacity: 0.7;
+    }
+    .modal-close:hover { opacity: 1; }
+    .modal-iframe-wrapper { aspect-ratio: 16/9; }
+    .modal-iframe-wrapper iframe { width: 100%; height: 100%; border: 0; }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      padding: 6rem 2rem 3rem; background: var(--zv-dark);
+      border-top: 1px solid var(--zv-border); text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .footer-vinyl {
+      position: absolute; top: -80px; right: -80px;
+      width: 350px; opacity: 0.04; pointer-events: none;
+    }
+    .footer-vinyl img { border-radius: 50%; width: 100%; }
+    .footer-brand { margin-bottom: 2rem; }
+    .footer-logo .logo-z, .footer-logo .logo-v {
+      font-family: var(--font-display); font-size: 4rem; line-height: 0.9;
+    }
+    .footer-sub {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.4em; color: var(--zv-muted); margin-top: 0.5rem;
+    }
+    .footer-links {
+      display: flex; gap: 2rem; justify-content: center;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.2em; color: var(--zv-muted); transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--zv-cyan); }
+    .footer-social { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .social-link {
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+      color: var(--zv-white); padding: 0.5rem 1rem;
+      border: 1px solid var(--zv-border); border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .social-link:hover { border-color: var(--zv-magenta); color: var(--zv-magenta); }
+    .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.15); }
+
+    /* ===== NEW RELEASE POPUP ===== */
+    .nr-backdrop {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0); pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nr-backdrop.active { pointer-events: all; }
+
+    .nr-popup {
+      position: relative; width: min(480px, 92vw);
+      background: var(--zv-card); border: 1px solid var(--zv-border);
+      border-radius: 20px; overflow: hidden;
+      transform: scale(0.8) translateY(40px); opacity: 0;
+    }
+
+    /* Vinyl sleeve + disc animation */
+    .nr-sleeve {
+      position: relative; width: 100%; aspect-ratio: 1;
+      overflow: hidden; background: var(--zv-black);
+    }
+    .nr-sleeve-img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .nr-disc {
+      position: absolute; top: 50%; right: -30%;
+      width: 65%; aspect-ratio: 1;
+      transform: translateY(-50%);
+      filter: drop-shadow(-5px 10px 40px rgba(0,0,0,0.8));
+    }
+    .nr-disc-inner {
+      width: 100%; height: 100%; border-radius: 50%;
+      position: relative; overflow: hidden;
+      /* Vinyl base: very dark with subtle warmth */
+      background: radial-gradient(circle at 50% 50%,
+        #1a1a1a 0%, #111 30%, #0a0a0a 60%, #050505 100%
+      );
+      box-shadow:
+        0 0 0 4px #0a0a0a,
+        0 0 0 5px rgba(255,255,255,0.06),
+        inset 0 0 60px rgba(0,0,0,0.8);
+    }
+
+    /* Vinyl grooves — multiple rings */
+    .nr-grooves {
+      position: absolute; inset: 0; border-radius: 50%; z-index: 1;
+      background:
+        repeating-radial-gradient(circle at center,
+          transparent 0px, transparent 3px,
+          rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 3.5px,
+          transparent 3.5px, transparent 6px
+        );
+    }
+    /* Thicker groove bands at intervals */
+    .nr-grooves::after {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at center,
+          transparent 0px, transparent 15px,
+          rgba(255,255,255,0.015) 15px, rgba(255,255,255,0.015) 16px,
+          transparent 16px, transparent 30px
+        );
+    }
+
+    /* Rainbow reflection — the iconic vinyl sheen */
+    .nr-disc-shine {
+      position: absolute; inset: 0; border-radius: 50%; z-index: 2;
+      background: conic-gradient(
+        from 200deg at 45% 45%,
+        transparent 0%,
+        rgba(100,0,255,0.06) 8%,
+        rgba(0,100,255,0.08) 15%,
+        rgba(0,229,255,0.06) 22%,
+        transparent 30%,
+        transparent 45%,
+        rgba(255,0,100,0.05) 52%,
+        rgba(255,100,0,0.04) 58%,
+        rgba(255,200,0,0.03) 63%,
+        transparent 70%,
+        transparent 85%,
+        rgba(0,229,255,0.04) 92%,
+        transparent 100%
+      );
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    /* Second shine layer for depth */
+    .nr-disc-shine2 {
+      position: absolute; inset: 0; border-radius: 50%; z-index: 2;
+      background: conic-gradient(
+        from 80deg at 55% 55%,
+        transparent 0%,
+        rgba(255,255,255,0.04) 5%,
+        transparent 12%,
+        transparent 50%,
+        rgba(255,255,255,0.03) 55%,
+        transparent 62%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Center label — looks like a real label */
+    .nr-label-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 34%; aspect-ratio: 1; border-radius: 50%;
+      z-index: 3;
+      background: radial-gradient(circle at 40% 35%,
+        #2a2a2a 0%, #1a1a1a 40%, #111 100%
+      );
+      border: 2px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      box-shadow:
+        inset 0 2px 8px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .nr-label-z {
+      font-family: var(--font-display); font-size: 1.8rem; line-height: 0.85;
+      color: var(--zv-cyan); letter-spacing: -0.02em;
+      text-shadow: 0 0 15px rgba(0,229,255,0.5);
+    }
+    .nr-label-v {
+      font-family: var(--font-display); font-size: 1.8rem; line-height: 0.85;
+      color: var(--zv-magenta); letter-spacing: -0.02em;
+      margin-left: 0.1em;
+      text-shadow: 0 0 15px rgba(255,0,180,0.5);
+    }
+    .nr-label-sub {
+      font-family: var(--font-mono); font-size: 0.3rem;
+      letter-spacing: 0.2em; color: var(--zv-muted); margin-top: 0.2rem;
+    }
+    /* Ring around label */
+    .nr-label-center::before {
+      content: ''; position: absolute; inset: -1px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Center spindle hole */
+    .nr-disc-hole {
+      position: absolute; top: 50%; left: 50%;
+      width: 4%; aspect-ratio: 1; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: #000;
+      z-index: 5;
+      box-shadow:
+        inset 0 1px 4px rgba(0,0,0,1),
+        0 0 0 2px rgba(255,255,255,0.05);
+    }
+
+    /* Edge highlight — rim of vinyl */
+    .nr-disc-rim {
+      position: absolute; inset: 0; border-radius: 50%; z-index: 0;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: inset 0 0 1px rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+
+    @keyframes nrSpin {
+      from { transform: translateY(-50%) rotate(0deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
+    }
+    .nr-disc.spinning { animation: nrSpin 2s linear infinite; }
+
+    .nr-new-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      background: var(--zv-magenta); color: #fff;
+      font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.25em; padding: 0.3rem 0.8rem; border-radius: 3px;
+      z-index: 3;
+    }
+    .nr-glow {
+      position: absolute; bottom: -20%; left: 50%; transform: translateX(-50%);
+      width: 80%; height: 40%; border-radius: 50%;
+      background: var(--zv-cyan); opacity: 0.06; filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .nr-body { padding: 1.75rem 2rem 2rem; text-align: center; }
+    .nr-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.35em; color: var(--zv-cyan); margin-bottom: 0.5rem;
+    }
+    .nr-title {
+      font-family: var(--font-display); font-size: 2.2rem;
+      letter-spacing: 0.02em; margin-bottom: 0.25rem;
+    }
+    .nr-artist { color: var(--zv-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .nr-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+    .nr-btn-primary {
+      background: var(--zv-cyan); color: var(--zv-black);
+      font-family: var(--font-body); font-weight: 700; font-size: 0.85rem;
+      padding: 0.7rem 2rem; border-radius: 100px; border: none;
+      cursor: pointer; transition: all 0.25s; letter-spacing: 0.02em;
+    }
+    .nr-btn-primary:hover { background: var(--zv-magenta); color: #fff; transform: scale(1.04); }
+    .nr-btn-secondary {
+      background: none; color: var(--zv-white);
+      font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;
+      padding: 0.7rem 1.5rem; border-radius: 100px;
+      border: 1px solid var(--zv-border); cursor: pointer; transition: all 0.25s;
+    }
+    .nr-btn-secondary:hover { border-color: var(--zv-cyan); color: var(--zv-cyan); }
+
+    .nr-close {
+      position: absolute; top: 1rem; right: 1rem; z-index: 5;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15); color: var(--zv-white);
+      font-size: 1rem; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s;
+    }
+    .nr-close:hover { background: var(--zv-magenta); border-color: var(--zv-magenta); }
+
+    /* ===== FILM GRAIN OVERLAY ===== */
+    .grain-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      opacity: 0.5;
+      background-size: 256px;
+    }
+
+    /* ===== MARQUEE TICKERS ===== */
+    .marquee-ticker {
+      overflow: hidden; white-space: nowrap;
+      padding: 1.1rem 0;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative; z-index: 2;
+      background: var(--zv-black);
+    }
+    .marquee-ticker::before,
+    .marquee-ticker::after {
+      content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2;
+      pointer-events: none;
+    }
+    .marquee-ticker::before { left: 0; background: linear-gradient(to right, var(--zv-black), transparent); }
+    .marquee-ticker::after { right: 0; background: linear-gradient(to left, var(--zv-black), transparent); }
+    .marquee-track {
+      display: inline-flex;
+      animation: marqueeScroll 35s linear infinite;
+    }
+    .marquee-ticker:hover .marquee-track { animation-play-state: paused; }
+    .marquee-track span {
+      font-family: var(--font-display);
+      font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+      letter-spacing: 0.15em;
+      padding: 0 1.5rem;
+      display: inline-flex; align-items: center; gap: 1.5rem;
+    }
+    .marquee-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-ticker.fast .marquee-track { animation-duration: 22s; }
+    .marquee-ticker.reverse .marquee-track { animation-direction: reverse; }
+    .marquee-ticker.cyan span { color: rgba(0,229,255,0.4); }
+    .marquee-ticker.cyan .marquee-dot { background: var(--zv-cyan); box-shadow: 0 0 8px rgba(0,229,255,0.5); }
+    .marquee-ticker.magenta span { color: rgba(255,0,180,0.4); }
+    .marquee-ticker.magenta .marquee-dot { background: var(--zv-magenta); box-shadow: 0 0 8px rgba(255,0,180,0.5); }
+    .marquee-ticker.muted span { color: rgba(255,255,255,0.08); font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.3em; }
+    .marquee-ticker.muted .marquee-dot { background: rgba(255,255,255,0.12); }
+
+    /* ===== FLOATING GLOW ORBS ===== */
+    .glow-orbs {
+      position: absolute; inset: 0; overflow: hidden;
+      pointer-events: none; z-index: 0;
+    }
+    .glow-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.15;
+    }
+    .glow-orb.cyan { background: var(--zv-cyan); }
+    .glow-orb.magenta { background: var(--zv-magenta); }
+    .glow-orb.float1 { animation: orbFloat1 25s ease-in-out infinite; }
+    .glow-orb.float2 { animation: orbFloat2 30s ease-in-out infinite; }
+    .glow-orb.float3 { animation: orbFloat3 20s ease-in-out infinite; }
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -50px) scale(1.15); }
+      66% { transform: translate(-30px, 30px) scale(0.9); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(-50px, -30px) scale(1.1); }
+      50% { transform: translate(30px, 50px) scale(0.95); }
+      75% { transform: translate(60px, -20px) scale(1.05); }
+    }
+    @keyframes orbFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-40px, -60px) scale(1.2); }
+    }
+
+    /* ===== TEXT REVEAL ANIMATION ===== */
+    .text-reveal-line {
+      overflow: hidden; display: block;
+    }
+    .text-reveal-line .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(110%);
+    }
+
+    /* ===== CHANNELS V2 — HORIZONTAL SCROLL CINEMATIC ===== */
+    .channels-section-v2 {
+      position: relative; z-index: 2;
+      padding: 5rem 0 4rem;
+      background: var(--zv-black);
+      overflow: hidden;
+    }
+    .channels-header-v2 {
+      text-align: center; margin-bottom: 2rem;
+      padding: 0 2rem;
+    }
+    .channels-header-v2 h3 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 0.02em;
+    }
+    .channels-header-v2 p {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.3em; color: var(--zv-cyan); margin-bottom: 0.75rem;
+    }
+
+    .channels-scroll-wrapper {
+      position: relative; max-width: 100%; overflow: visible;
+    }
+    .channels-scroll {
+      display: flex; gap: 1.5rem;
+      overflow-x: auto; overflow-y: visible;
+      padding: 1rem 2rem 2rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .channels-scroll::-webkit-scrollbar { display: none; }
+
+    .channel-card-v2 {
+      flex: 0 0 300px; height: 460px;
+      scroll-snap-align: center;
+      position: relative; border-radius: 20px;
+      overflow: visible; cursor: pointer;
+      transition: transform 0.15s ease-out;
+    }
+    .channel-card-v2 .card-inner {
+      position: relative; width: 100%; height: 100%;
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+    .channel-card-v2:hover .card-inner {
+      border-color: rgba(0,229,255,0.25);
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(0,229,255,0.07),
+        inset 0 0 60px rgba(0,0,0,0.2);
+    }
+    .channel-card-v2 .card-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(0.4) saturate(0.7);
+      transition: filter 0.6s, transform 0.8s;
+    }
+    .channel-card-v2:hover .card-bg {
+      filter: brightness(0.55) saturate(1.1);
+      transform: scale(1.1);
+    }
+
+    /* Glass panel at bottom — two zones: info + platforms */
+    .channel-card-v2 .card-glass {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 0;
+      background: linear-gradient(to top,
+        rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.88) 30%,
+        rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 75%, transparent 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2;
+      display: flex; flex-direction: column;
+    }
+    /* Info zone — name, genre */
+    .channel-card-v2 .card-info-zone {
+      padding: 2rem 1.4rem 0.8rem;
+    }
+    /* Platform zone — separated, always visible */
+    .channel-card-v2 .card-platform-zone {
+      padding: 0 1.4rem 1.2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: auto;
+    }
+
+    .channel-card-v2 .card-market {
+      position: absolute; top: 1rem; left: 1rem;
+      font-family: var(--font-mono); font-size: 0.5rem;
+      letter-spacing: 0.25em; font-weight: 700;
+      padding: 0.25rem 0.7rem; border-radius: 3px; z-index: 3;
+    }
+    .channel-card-v2 .card-number {
+      position: absolute; top: 0.5rem; right: 1.5rem;
+      font-family: var(--font-display); font-size: 7rem;
+      color: rgba(255,255,255,0.025); line-height: 1;
+      z-index: 1; pointer-events: none;
+    }
+    .channel-card-v2 .card-flag { font-size: 1.4rem; margin-bottom: 0.3rem; display: block; }
+    .channel-card-v2 .card-name {
+      font-family: var(--font-display); font-size: 1.8rem;
+      letter-spacing: 0.04em; line-height: 1;
+      margin-bottom: 0.35rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    }
+    .channel-card-v2 .card-genre {
+      font-family: var(--font-mono); font-size: 0.5rem;
+      letter-spacing: 0.2em; color: var(--zv-cyan);
+      opacity: 0.7;
+    }
+
+    /* Platform icons — always visible, subtle, pro layout */
+    .channel-card-v2 .card-platforms {
+      display: flex; gap: 6px;
+      padding-top: 0.7rem;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+    .channel-card-v2:hover .card-platforms {
+      opacity: 1;
+    }
+    .channel-card-v2 .card-platforms a {
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      text-decoration: none;
+      background: rgba(255,255,255,0.04);
+    }
+    .channel-card-v2 .card-platforms a svg {
+      width: 13px; height: 13px;
+      opacity: 0.45;
+      filter: saturate(0) brightness(2);
+      transition: opacity 0.3s, filter 0.3s;
+    }
+    .channel-card-v2:hover .card-platforms a svg {
+      opacity: 0.7;
+      filter: saturate(0.4) brightness(1.6);
+    }
+    .channel-card-v2 .card-platforms a:hover svg {
+      opacity: 1;
+      filter: saturate(1) brightness(1);
+    }
+    .channel-card-v2 .card-platforms a:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.15);
+    }
+    /* Stagger delay for entrance */
+    .channel-card-v2 .card-platforms a:nth-child(1) { transition-delay: 0s; }
+    .channel-card-v2 .card-platforms a:nth-child(2) { transition-delay: 0.03s; }
+    .channel-card-v2 .card-platforms a:nth-child(3) { transition-delay: 0.06s; }
+    .channel-card-v2 .card-platforms a:nth-child(4) { transition-delay: 0.09s; }
+    .channel-card-v2 .card-platforms a:nth-child(5) { transition-delay: 0.12s; }
+
+    /* Glow line bottom */
+    .channel-card-v2 .card-inner::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 4;
+    }
+    .channel-card-v2:hover .card-inner::after { transform: scaleX(1); }
+
+    /* Shine sweep */
+    .channel-card-v2 .card-inner::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 55%, transparent 60%);
+      z-index: 3; pointer-events: none;
+      transform: translateX(-120%);
+      transition: transform 0.7s ease;
+    }
+    .channel-card-v2:hover .card-inner::before { transform: translateX(120%); }
+
+    /* Scroll nav */
+    .channels-scroll-nav {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem; margin-top: 1.5rem; padding: 0 2rem;
+    }
+    .ch-scroll-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--zv-border);
+      color: var(--zv-white); font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .ch-scroll-btn:hover {
+      background: var(--zv-cyan); border-color: var(--zv-cyan); color: var(--zv-black);
+    }
+    .ch-scroll-dots { display: flex; gap: 6px; }
+    .ch-scroll-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--zv-border); transition: all 0.3s; cursor: pointer;
+    }
+    .ch-scroll-dot.active {
+      background: var(--zv-cyan);
+      box-shadow: 0 0 10px rgba(0,229,255,0.5);
+      width: 24px; border-radius: 4px;
+    }
+
+    /* ===== SECTION GLOW DIVIDER ===== */
+    .section-glow-line {
+      height: 2px; width: 100%;
+      background: linear-gradient(90deg, transparent 5%, var(--zv-cyan) 30%, var(--zv-magenta) 70%, transparent 95%);
+      opacity: 0.35;
+      box-shadow: 0 0 20px rgba(0,229,255,0.15), 0 0 40px rgba(255,0,180,0.1);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    /* ===== TABLET (max 1024px) ===== */
+    @media (max-width: 1024px) {
+      .nav-center { display: none; }
+      .nav-cta-btn { display: none; }
+      .nav-hamburger { display: flex; align-items: center; justify-content: center; }
+
+      .studio-heading { font-size: clamp(2.5rem, 6vw, 5rem); }
+
+      .channels-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+      .channel-platforms { opacity: 1; transform: translateY(0); }
+
+      .channel-card-v2 { flex: 0 0 280px; height: 420px; }
+      .channel-card-v2 .card-name { font-size: 1.7rem; }
+      .channel-card-v2 .card-number { font-size: 5rem; }
+      .channel-card-v2 .card-platforms { opacity: 1; transform: translateY(0); }
+
+      .artist-featured { height: 55vh; }
+      .artist-featured-name { font-size: clamp(2.5rem, 6vw, 4rem); }
+      .artist-featured-content { padding: 2.5rem 3rem; }
+
+      .releases-grid { grid-template-columns: repeat(2, 1fr); }
+      .release-featured-cover { width: 220px; height: 220px; }
+      .release-featured-content { padding: 2.5rem; gap: 2rem; }
+      .release-featured-title { font-size: clamp(2rem, 4vw, 3rem); }
+
+      .video-card:first-child .video-title { font-size: 2rem; }
+      .video-card:first-child .video-info { padding: 1.5rem 2rem; }
+    }
+
+    /* ===== MOBILE (max 768px) ===== */
+    @media (max-width: 768px) {
+      /* NAV */
+      .site-nav { padding: 0 1rem; height: 60px; }
+      .nav-logo-text { font-size: 1.2rem; }
+      .lang-btn { padding: 0.35rem 0.6rem; font-size: 0.6rem; }
+      .mobile-menu { top: 60px; }
+      .mobile-menu a { font-size: 2rem; }
+
+      /* HERO */
+      .s-hero { height: 400vh; }
+      .scroll-hint span { font-size: 0.5rem; }
+
+      /* STUDIO */
+      .studio-hero { height: 80vh; min-height: 400px; }
+      .studio-heading { font-size: clamp(2rem, 7vw, 3.5rem); }
+      .studio-body { font-size: 0.85rem; padding: 0 1rem; }
+      .studio-text { padding: 1.5rem; }
+      .channels-section { padding: 3rem 1rem 4rem; }
+      .channels-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .channel-card { aspect-ratio: 3/4; border-radius: 12px; }
+      .channel-card-content { padding: 1rem; }
+      .channel-name { font-size: 1.1rem; }
+      .channel-genre { font-size: 0.45rem; }
+      .channel-tag { font-size: 0.4rem; padding: 0.15rem 0.4rem; top: 0.6rem; right: 0.6rem; }
+      .channel-flag { font-size: 1rem; }
+      .channels-header h3 { font-size: 1.6rem; }
+      .channel-platforms { opacity: 1; transform: translateY(0); }
+      .channel-platform-icon { width: 28px; height: 28px; }
+
+      /* V2 Channels */
+      .channels-section-v2 { padding: 3rem 0 3rem; }
+      .channel-card-v2 { flex: 0 0 260px; height: 400px; }
+      .channel-card-v2 .card-name { font-size: 1.5rem; }
+      .channel-card-v2 .card-number { font-size: 4rem; }
+      .channel-card-v2 .card-flag { font-size: 1.3rem; }
+      .channel-card-v2 .card-platforms { opacity: 1; transform: translateY(0); }
+      .channel-card-v2 .card-platforms a { width: 26px; height: 26px; border-radius: 5px; }
+      .channel-card-v2 .card-platforms a svg { width: 11px; height: 11px; }
+      .channel-card-v2 .card-info-zone { padding: 1.5rem 1.2rem 0.6rem; }
+      .channel-card-v2 .card-platform-zone { padding: 0 1.2rem 1rem; }
+      .channel-card-v2 .card-name { font-size: 1.4rem; }
+      .channels-scroll { padding: 0.5rem 1rem 1.5rem; gap: 1rem; }
+
+      /* Marquees */
+      .marquee-track span { font-size: 0.8rem; padding: 0 1rem; }
+      .marquee-ticker { padding: 0.8rem 0; }
+
+      /* Orbs smaller on mobile */
+      .glow-orb { filter: blur(80px); opacity: 0.1; }
+
+      /* ARTISTAS */
+      .s-artistas { padding: 4rem 0; }
+      .s-artistas .section-header { padding: 0 1.25rem; margin-bottom: 2rem; }
+      .artist-featured { height: 60vh; min-height: 320px; }
+      .artist-featured-content { padding: 1.5rem; }
+      .artist-featured-name { font-size: clamp(2rem, 10vw, 3rem); }
+      .artist-featured-bio { font-size: 0.85rem; }
+      .artist-featured-tag { font-size: 0.5rem; }
+      .artist-featured-number { font-size: clamp(4rem, 20vw, 7rem); top: 1rem; right: 1.5rem; }
+      .artist-featured-links a { width: 40px; height: 40px; }
+      .artists-row { flex-direction: column; }
+      .artist-row-card {
+        min-height: 240px; border-right: none;
+        border-bottom: 1px solid var(--zv-border);
+      }
+      .artist-row-card:hover { flex: 1; }
+      .artist-row-content { padding: 1.25rem; }
+      .artist-row-name { font-size: 1.5rem; }
+      .artist-row-bio { opacity: 1; max-height: 60px; font-size: 0.75rem; }
+      .artist-row-num { font-size: 2rem; top: 1rem; left: 1rem; }
+
+      /* LANZAMIENTOS */
+      .s-lanzamientos { padding: 4rem 0; overflow: hidden; }
+      .s-lanzamientos .section-header { padding: 0 1rem; }
+      .release-featured { border-radius: 14px; margin: 0 1rem 2rem; min-height: auto; }
+      .release-featured-content { grid-template-columns: 1fr; padding: 1.5rem; gap: 1.25rem; min-height: auto; }
+      .release-featured-cover { width: 100%; height: auto; aspect-ratio: 1; max-width: 280px; margin: 0 auto; }
+      .release-featured-title { font-size: 2rem; }
+      .release-featured-badge { font-size: 0.5rem; margin-bottom: 0.75rem; }
+      .release-featured-date { font-size: 0.6rem; margin-bottom: 1rem; }
+      .release-featured-info { text-align: center; align-items: center; }
+      .release-featured-platforms { gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+      .platform-btn { font-size: 0.55rem; padding: 0.5rem 1rem; }
+      .platform-btn svg { width: 12px; height: 12px; }
+      .release-featured-number { display: none; }
+      .releases-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; padding: 0 1rem; margin-bottom: 2.5rem; }
+      .release-card { border-radius: 10px; }
+      .release-card-info { padding: 0.6rem 0.75rem; }
+      .release-card-title { font-size: 0.9rem; }
+      .release-card-artist { font-size: 0.65rem; }
+      .upcoming-section { padding: 2rem 1rem 0; }
+      .upcoming-header h3 { font-size: 1.4rem; }
+      .upcoming-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .upcoming-card { border-radius: 10px; }
+      .upcoming-card-title { font-size: 1.2rem; }
+      .upcoming-card-artist { font-size: 0.75rem; }
+      .countdown { gap: 0.5rem; }
+      .countdown-item { padding: 0.5rem 0.7rem; min-width: 50px; border-radius: 6px; }
+      .countdown-num { font-size: 1.3rem; }
+
+      /* VIDEOS */
+      .s-videos { padding: 4rem 1rem; }
+      .videos-list { grid-template-columns: 1fr; gap: 0.75rem; }
+      .video-card:first-child { grid-column: 1; }
+      .video-card:first-child .video-thumb { aspect-ratio: 16/9; }
+      .video-card:first-child .video-title { font-size: 1.5rem; }
+      .video-card:first-child .video-play svg { width: 48px; height: 48px; }
+      .video-card:first-child .video-info { padding: 1.25rem; }
+      .video-card { border-radius: 10px; }
+      .video-thumb { aspect-ratio: 16/9; }
+      .video-info { padding: 1rem 1.25rem; }
+      .video-title { font-size: 1.15rem; }
+      .video-label { font-size: 0.5rem; margin-bottom: 0.3rem; }
+      .video-meta { font-size: 0.75rem; }
+
+      /* FOOTER */
+      .site-footer { padding: 4rem 1.25rem 2rem; }
+      .footer-logo .logo-z, .footer-logo .logo-v { font-size: 3rem; }
+      .footer-links { gap: 0.75rem; }
+      .footer-links a { font-size: 0.6rem; letter-spacing: 0.15em; }
+      .footer-social { gap: 0.4rem; }
+      .social-link { font-size: 0.5rem; padding: 0.4rem 0.75rem; }
+
+      /* POPUP */
+      .nr-popup { width: 92vw; border-radius: 16px; }
+      .nr-sleeve { aspect-ratio: 4/3; }
+      .nr-disc { width: 55%; }
+      .nr-label-z, .nr-label-v { font-size: 1.2rem; }
+      .nr-label-sub { font-size: 0.25rem; }
+      .nr-title { font-size: 1.6rem; }
+      .nr-body { padding: 1.25rem 1.5rem 1.5rem; }
+      .nr-btn-primary, .nr-btn-secondary { font-size: 0.78rem; padding: 0.6rem 1.5rem; }
+      .nr-new-badge { font-size: 0.5rem; padding: 0.2rem 0.6rem; }
+
+      /* SECTION HEADERS */
+      .section-header { padding: 0 0.5rem; }
+      .section-title { font-size: clamp(1.8rem, 7vw, 3.5rem); }
+      .section-label { font-size: 0.6rem; letter-spacing: 0.3em; }
+
+      /* Global mobile overflow fix */
+      .s-artistas, .s-videos, .s-lanzamientos, .channels-section { overflow: hidden; }
+    }
+
+    /* ===== SMALL MOBILE (max 420px) ===== */
+    @media (max-width: 420px) {
+      .site-nav { padding: 0 0.75rem; }
+      .s-hero { height: 350vh; }
+
+      .channels-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .channel-name { font-size: 0.9rem; }
+      .channel-card-content { padding: 0.75rem; }
+      .channel-flag { font-size: 0.85rem; margin-bottom: 0.2rem; }
+      .channel-platform-icon { width: 24px; height: 24px; }
+      .channel-platform-icon svg { width: 12px; height: 12px; }
+
+      .channel-card-v2 { flex: 0 0 240px; height: 360px; }
+      .channel-card-v2 .card-name { font-size: 1.3rem; }
+      .channel-card-v2 .card-glass { padding: 2rem 1.25rem 1.25rem; }
+      .channel-card-v2 .card-platforms a { width: 28px; height: 28px; }
+      .channel-card-v2 .card-platforms a svg { width: 13px; height: 13px; }
+      .ch-scroll-btn { width: 36px; height: 36px; font-size: 0.85rem; }
+      .marquee-track span { font-size: 0.7rem; }
+
+      .artist-featured { height: 50vh; min-height: 280px; }
+      .artist-featured-name { font-size: 1.8rem; }
+      .artist-featured-bio { font-size: 0.8rem; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+      .artist-featured-links { gap: 0.5rem; }
+      .artist-featured-links a { width: 36px; height: 36px; font-size: 0.7rem; }
+
+      .release-featured-title { font-size: 1.6rem; }
+      .release-featured-cover { max-width: 220px; }
+      .release-featured-content { padding: 1.25rem; }
+      .release-featured-platforms { flex-direction: column; }
+      .platform-btn { text-align: center; justify-content: center; }
+      .releases-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+
+      .video-title { font-size: 1rem; }
+      .video-info { padding: 0.75rem; }
+      .videos-list { padding: 0 0.75rem; }
+      .release-featured { margin: 0 0.75rem 1.5rem; }
+      .releases-grid { margin: 0 0.75rem 2rem; }
+
+      .countdown { gap: 0.35rem; justify-content: center; }
+      .countdown-item { padding: 0.4rem 0.5rem; min-width: 44px; }
+      .countdown-num { font-size: 1.1rem; }
+      .countdown-label { font-size: 0.4rem; }
+
+      .nr-popup { width: 95vw; border-radius: 12px; }
+      .nr-sleeve { aspect-ratio: 1; }
+      .nr-disc { width: 50%; }
+      .nr-title { font-size: 1.4rem; }
+      .nr-artist { font-size: 0.8rem; margin-bottom: 1rem; }
+      .nr-actions { flex-direction: column; gap: 0.5rem; }
+      .nr-btn-primary, .nr-btn-secondary { width: 100%; text-align: center; }
+      .nr-body { padding: 1rem 1.25rem 1.25rem; }
+
+      .footer-links { flex-direction: column; align-items: center; gap: 0.5rem; }
+      .footer-social { flex-wrap: wrap; justify-content: center; }
+      .site-footer { padding: 3rem 1rem 2rem; }
+
+      .mobile-menu a { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Film grain overlay — generates via JS -->
+<div class="grain-overlay" id="grainOverlay"></div>
+
+<!-- ======= NAVBAR ======= -->
+<nav class="site-nav" id="siteNav">
+  <a href="#hero" class="nav-logo">
+    <span class="nav-logo-text"><span class="logo-z-sm">Z</span><span class="logo-v-sm">V</span></span>
+  </a>
+
+  <ul class="nav-center" id="navCenter">
+    <li><a href="#studio" data-i18n="nav.studio">Studio</a></li>
+    <li><a href="#artistas" data-i18n="nav.artists">Artists</a></li>
+    <li><a href="#lanzamientos" data-i18n="nav.releases">Releases</a></li>
+    <li><a href="#videos" data-i18n="nav.videos">Videos</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-option active" data-lang="en" onclick="setLang('en')">
+          <span class="lang-flag">🇺🇸</span> English
+        </button>
+        <button class="lang-option" data-lang="es" onclick="setLang('es')">
+          <span class="lang-flag">🇲🇽</span> Español
+        </button>
+        <button class="lang-option" data-lang="ja" onclick="setLang('ja')">
+          <span class="lang-flag">🇯🇵</span> 日本語
+        </button>
+        <button class="lang-option" data-lang="ko" onclick="setLang('ko')">
+          <span class="lang-flag">🇰🇷</span> 한국어
+        </button>
+      </div>
+    </div>
+
+    <a href="mailto:contacto@zvrecords.com" class="nav-cta-btn" data-i18n="nav.contact">Contact</a>
+
+    <button class="nav-hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#studio" data-i18n="nav.studio" onclick="closeMobileMenu()">Studio</a>
+  <a href="#artistas" data-i18n="nav.artists" onclick="closeMobileMenu()">Artists</a>
+  <a href="#lanzamientos" data-i18n="nav.releases" onclick="closeMobileMenu()">Releases</a>
+  <a href="#videos" data-i18n="nav.videos" onclick="closeMobileMenu()">Videos</a>
+  <a href="mailto:contacto@zvrecords.com" data-i18n="nav.contact" onclick="closeMobileMenu()">Contact</a>
+</div>
+
+<!-- ======= HERO — CANVAS SCROLL SEQUENCE (técnica Apple) ======= -->
+<section id="hero" class="s-hero">
+  <div class="hero-pin">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content"></div>
+
+    <div class="scroll-hint">
+      <span data-i18n="hero.scroll">SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-glow-line"></div>
+<!-- ═══ MARQUEE 1 — Between Hero & Studio ═══ -->
+<div class="marquee-ticker cyan">
+  <div class="marquee-track" id="marquee1"></div>
+</div>
+
+<!-- ======= STUDIO ======= -->
+<section id="studio" class="s-studio" style="position:relative;">
+  <!-- Floating orbs -->
+  <div class="glow-orbs">
+    <div class="glow-orb cyan float1" style="width:400px;height:400px;top:-10%;left:-5%;"></div>
+    <div class="glow-orb magenta float2" style="width:350px;height:350px;bottom:10%;right:-8%;"></div>
+  </div>
+
+  <div class="studio-hero">
+    <div class="studio-bg" id="studioBg" style="background-image: url('public/assets/frames/studio_booths.jpg')"></div>
+    <div class="studio-overlay"></div>
+    <div class="studio-text">
+      <p class="studio-label" data-i18n="studio.label">THE STUDIO</p>
+      <h2 class="studio-heading text-reveal-target" data-i18n="studio.heading">Where music<br/>is born.</h2>
+      <p class="studio-body" data-i18n="studio.body">
+        World-class facilities with recording booths,
+        analog consoles and cutting-edge equipment.
+      </p>
+    </div>
+  </div>
+
+  <!-- Channels V2 — Horizontal Scroll Cinematic -->
+  <div class="channels-section-v2" id="channelsSection">
+    <div class="channels-header-v2">
+      <p data-i18n="channels.label">OUR CHANNELS</p>
+      <h3 class="text-reveal-target" data-i18n="channels.title">Global <span class="text-cyan">Talent</span></h3>
+    </div>
+    <div class="channels-scroll-wrapper">
+      <div class="channels-scroll" id="channelsScroll"></div>
+      <div class="channels-scroll-nav">
+        <button class="ch-scroll-btn" onclick="scrollChannels(-1)" aria-label="Scroll left">‹</button>
+        <div class="ch-scroll-dots" id="chScrollDots"></div>
+        <button class="ch-scroll-btn" onclick="scrollChannels(1)" aria-label="Scroll right">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keep old grid hidden for fallback -->
+  <div class="channels-section" id="channelsSectionOld" style="display:none;">
+    <div class="channels-grid" id="channelsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ MARQUEE 2 — Between Studio & Artists ═══ -->
+<div class="marquee-ticker magenta reverse">
+  <div class="marquee-track" id="marquee2"></div>
+</div>
+<div class="section-glow-line"></div>
+
+<!-- ======= ARTISTAS ======= -->
+<section id="artistas" class="s-artistas" style="position:relative;overflow:hidden;">
+  <!-- Floating orbs -->
+  <div class="glow-orbs">
+    <div class="glow-orb magenta float3" style="width:300px;height:300px;top:5%;right:-3%;"></div>
+    <div class="glow-orb cyan float1" style="width:250px;height:250px;bottom:15%;left:-5%;"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-label" data-i18n="artists.label">ROSTER</span>
+    <h2 class="section-title text-reveal-target" data-i18n="artists.title">Our <span class="text-cyan">Artists</span></h2>
+  </div>
+
+  <!-- Featured Artist — Hero size -->
+  <div class="artist-featured" id="artistFeatured">
+    <img src="public/assets/frames/vid1_hd_05.jpg" alt="VELOZ" />
+    <span class="artist-featured-number">01</span>
+    <div class="artist-featured-content">
+      <span class="artist-featured-tag" data-i18n="artist.veloz.genre">REGGAETON · URBAN</span>
+      <h3 class="artist-featured-name">VELOZ</h3>
+      <p class="artist-featured-bio" data-i18n="artist.veloz.bio">The future of reggaeton with electronic beats that break boundaries.</p>
+      <div class="artist-featured-links">
+        <a href="#" title="Spotify">♫</a>
+        <a href="#" title="YouTube">▶</a>
+        <a href="#" title="TikTok">♪</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expanding Row — hover to expand -->
+  <div class="artists-row" id="artistsRow">
+    <div class="artist-row-card">
+      <img src="public/assets/frames/vid2_hd_06.jpg" alt="LUNA ROJA" />
+      <span class="artist-row-num">02</span>
+      <div class="artist-row-content">
+        <span class="artist-row-genre" data-i18n="artist.luna.genre">TRAP · ALTERNATIVE</span>
+        <h3 class="artist-row-name">LUNA ROJA</h3>
+        <p class="artist-row-bio" data-i18n="artist.luna.bio">Trap with soul, raw lyrics and beats that hit the heart.</p>
+      </div>
+    </div>
+    <div class="artist-row-card">
+      <img src="public/assets/frames/vid3_hd_06.jpg" alt="NOVA" />
+      <span class="artist-row-num">03</span>
+      <div class="artist-row-content">
+        <span class="artist-row-genre" data-i18n="artist.nova.genre">LATIN POP · R&B</span>
+        <h3 class="artist-row-name">NOVA</h3>
+        <p class="artist-row-bio" data-i18n="artist.nova.bio">The voice of modern latin pop you can't get out of your head.</p>
+      </div>
+    </div>
+    <div class="artist-row-card">
+      <img src="public/assets/frames/vid1_hd_09.jpg" alt="TORMENTA" />
+      <span class="artist-row-num">04</span>
+      <div class="artist-row-content">
+        <span class="artist-row-genre">CORRIDOS · REGIONAL</span>
+        <h3 class="artist-row-name">TORMENTA</h3>
+        <p class="artist-row-bio">Corridos tumbados del futuro que golpean el alma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= LANZAMIENTOS ======= -->
+<section id="lanzamientos" class="s-lanzamientos" style="position:relative;overflow:hidden;">
+  <!-- Floating orbs -->
+  <div class="glow-orbs">
+    <div class="glow-orb cyan float2" style="width:350px;height:350px;top:-5%;left:60%;"></div>
+    <div class="glow-orb magenta float3" style="width:280px;height:280px;bottom:5%;left:-3%;"></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-label" data-i18n="releases.label">DISCOGRAPHY</span>
+    <h2 class="section-title text-reveal-target" data-i18n="releases.title">Latest <span class="text-magenta">Releases</span></h2>
+  </div>
+
+  <!-- Featured Release — big hero card -->
+  <div class="release-featured" id="releaseFeatured">
+    <div class="release-featured-cover">
+      <img src="public/assets/frames/vid1_hd_03.jpg" alt="Velocidad Máxima" />
+    </div>
+    <div class="release-featured-info">
+      <span class="release-featured-badge">ALBUM</span>
+      <h3 class="release-featured-title">VELOCIDAD MÁXIMA</h3>
+      <span class="release-featured-artist">VELOZ</span>
+      <span class="release-featured-date">MARCH 2026</span>
+      <div class="release-featured-platforms">
+        <a href="#" class="platform-btn primary">▶ Spotify</a>
+        <a href="#" class="platform-btn">Apple Music</a>
+        <a href="#" class="platform-btn">YouTube Music</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Releases grid — compact horizontal cards -->
+  <div class="releases-grid" id="releasesGrid">
+    <article class="release-card">
+      <div class="release-card-cover">
+        <img src="public/assets/frames/vid2_hd_03.jpg" alt="Eclipse" />
+      </div>
+      <div class="release-card-info">
+        <span class="release-card-badge">EP</span>
+        <h3 class="release-card-title">ECLIPSE</h3>
+        <span class="release-card-artist">LUNA ROJA</span>
+      </div>
+    </article>
+    <article class="release-card">
+      <div class="release-card-cover">
+        <img src="public/assets/frames/vid3_hd_03.jpg" alt="Supernova" />
+      </div>
+      <div class="release-card-info">
+        <span class="release-card-badge">SINGLE</span>
+        <h3 class="release-card-title">SUPERNOVA</h3>
+        <span class="release-card-artist">NOVA</span>
+      </div>
+    </article>
+    <article class="release-card">
+      <div class="release-card-cover">
+        <img src="public/assets/frames/vid1_hd_07.jpg" alt="Noche Eterna" />
+      </div>
+      <div class="release-card-info">
+        <span class="release-card-badge">SINGLE</span>
+        <h3 class="release-card-title">NOCHE ETERNA</h3>
+        <span class="release-card-artist">VELOZ</span>
+      </div>
+    </article>
+  </div>
+
+  <!-- UPCOMING Releases with Countdown -->
+  <div class="upcoming-section" id="upcomingSection">
+    <div class="upcoming-header">
+      <div>
+        <span class="upcoming-label" data-i18n="upcoming.label">COMING SOON</span>
+        <h3 data-i18n="upcoming.title">Upcoming <span class="text-cyan">Drops</span></h3>
+      </div>
+    </div>
+    <div class="upcoming-grid">
+      <article class="upcoming-card">
+        <div class="upcoming-card-top">
+          <img src="public/assets/frames/vid2_hd_07.jpg" alt="Midnight" />
+          <span class="upcoming-badge" data-i18n="upcoming.new">NEW</span>
+        </div>
+        <div class="upcoming-card-body">
+          <h4 class="upcoming-card-title">MIDNIGHT</h4>
+          <span class="upcoming-card-artist">LUNA ROJA × VELOZ</span>
+          <div class="countdown" data-date="2026-04-15T00:00:00">
+            <div class="countdown-item">
+              <span class="countdown-num cd-days">--</span>
+              <span class="countdown-label" data-i18n="cd.days">DAYS</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-hours">--</span>
+              <span class="countdown-label" data-i18n="cd.hours">HRS</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-mins">--</span>
+              <span class="countdown-label" data-i18n="cd.mins">MIN</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-secs">--</span>
+              <span class="countdown-label" data-i18n="cd.secs">SEC</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="upcoming-card">
+        <div class="upcoming-card-top">
+          <img src="public/assets/frames/vid3_hd_07.jpg" alt="Galaxia" />
+          <span class="upcoming-badge" data-i18n="upcoming.new">NEW</span>
+        </div>
+        <div class="upcoming-card-body">
+          <h4 class="upcoming-card-title">GALAXIA</h4>
+          <span class="upcoming-card-artist">NOVA</span>
+          <div class="countdown" data-date="2026-05-01T00:00:00">
+            <div class="countdown-item">
+              <span class="countdown-num cd-days">--</span>
+              <span class="countdown-label" data-i18n="cd.days">DAYS</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-hours">--</span>
+              <span class="countdown-label" data-i18n="cd.hours">HRS</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-mins">--</span>
+              <span class="countdown-label" data-i18n="cd.mins">MIN</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-num cd-secs">--</span>
+              <span class="countdown-label" data-i18n="cd.secs">SEC</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MARQUEE 3 — Between Releases & Videos ═══ -->
+<div class="section-glow-line"></div>
+<div class="marquee-ticker muted fast">
+  <div class="marquee-track" id="marquee3"></div>
+</div>
+
+<!-- ======= VIDEOS ======= -->
+<section id="videos" class="s-videos" style="position:relative;overflow:hidden;">
+  <!-- Floating orbs -->
+  <div class="glow-orbs">
+    <div class="glow-orb cyan float1" style="width:300px;height:300px;top:20%;right:-5%;"></div>
+  </div>
+  <div class="section-header">
+    <span class="section-label" data-i18n="videos.label">CONTENT</span>
+    <h2 class="section-title" data-i18n="videos.title">Featured <span class="text-cyan">Videos</span></h2>
+  </div>
+  <div class="videos-list">
+    <article class="video-card" onclick="openVideo('dQw4w9WgXcQ')">
+      <div class="video-thumb">
+        <img src="public/assets/frames/vid1_hd_04.jpg" alt="Velocidad Máxima" loading="lazy" />
+        <div class="video-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="video-info">
+        <span class="video-label" data-i18n="video.type.mv">OFFICIAL MV</span>
+        <h3 class="video-title">VELOCIDAD MÁXIMA</h3>
+        <span class="video-meta">VELOZ · 2026</span>
+      </div>
+    </article>
+    <article class="video-card" onclick="openVideo('dQw4w9WgXcQ')">
+      <div class="video-thumb">
+        <img src="public/assets/frames/vid2_hd_04.jpg" alt="Eclipse" loading="lazy" />
+        <div class="video-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="video-info">
+        <span class="video-label" data-i18n="video.type.mv">OFFICIAL MV</span>
+        <h3 class="video-title">ECLIPSE</h3>
+        <span class="video-meta">LUNA ROJA · 2026</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- Video Modal -->
+<div id="videoModal" class="video-modal" onclick="closeVideo()">
+  <div class="modal-inner" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeVideo()">✕</button>
+    <div class="modal-iframe-wrapper">
+      <iframe id="modalIframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ======= NEW RELEASE POPUP ======= -->
+<div class="nr-backdrop" id="nrBackdrop" onclick="closeNewRelease()">
+  <div class="nr-popup" id="nrPopup" onclick="event.stopPropagation()">
+    <button class="nr-close" onclick="closeNewRelease()">✕</button>
+    <div class="nr-sleeve">
+      <img src="public/assets/frames/vid1_hd_03.jpg" alt="New Release Cover" class="nr-sleeve-img" />
+      <div class="nr-disc" id="nrDisc">
+        <div class="nr-disc-inner">
+          <div class="nr-grooves"></div>
+          <div class="nr-disc-shine"></div>
+          <div class="nr-disc-shine2"></div>
+          <div class="nr-label-center">
+            <span><span class="nr-label-z">Z</span><span class="nr-label-v">V</span></span>
+            <span class="nr-label-sub">RECORDS</span>
+          </div>
+          <div class="nr-disc-hole"></div>
+          <div class="nr-disc-rim"></div>
+        </div>
+      </div>
+      <span class="nr-new-badge" data-i18n="popup.badge">🔥 NEW RELEASE</span>
+      <div class="nr-glow"></div>
+    </div>
+    <div class="nr-body">
+      <p class="nr-label" data-i18n="popup.label">OUT NOW</p>
+      <h3 class="nr-title">MIDNIGHT</h3>
+      <p class="nr-artist">LUNA ROJA × VELOZ</p>
+      <div class="nr-actions">
+        <button class="nr-btn-primary" onclick="window.open('#','_blank')" data-i18n="popup.listen">▶ Listen Now</button>
+        <button class="nr-btn-secondary" onclick="closeNewRelease()" data-i18n="popup.later">Maybe Later</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MARQUEE 4 — Before Footer ═══ -->
+<div class="marquee-ticker cyan reverse fast">
+  <div class="marquee-track" id="marquee4"></div>
+</div>
+
+<!-- ======= FOOTER ======= -->
+<footer class="site-footer">
+  <div class="footer-vinyl">
+    <img src="public/assets/frames/vinyl_crop.jpg" alt="ZV Records" />
+  </div>
+  <div class="footer-brand">
+    <div class="footer-logo">
+      <span class="logo-z">Z</span><span class="logo-v">V</span>
+    </div>
+    <p class="footer-sub" data-i18n="footer.sub">PRODUCTION CO. · RECORDS · EST. 2024</p>
+  </div>
+  <div class="footer-links">
+    <a href="#hero" data-i18n="footer.home">Home</a>
+    <a href="#studio" data-i18n="nav.studio">Studio</a>
+    <a href="#artistas" data-i18n="nav.artists">Artists</a>
+    <a href="#lanzamientos" data-i18n="nav.releases">Releases</a>
+    <a href="#videos" data-i18n="nav.videos">Videos</a>
+  </div>
+  <div class="footer-social">
+    <a href="#" class="social-link">Instagram</a>
+    <a href="#" class="social-link">TikTok</a>
+    <a href="#" class="social-link">YouTube</a>
+    <a href="#" class="social-link">Spotify</a>
+  </div>
+  <p class="footer-copy" data-i18n="footer.copy">© 2024 ZV Production Co. Records. All rights reserved.</p>
+</footer>
+
+<script>
+// ======= DYNAMIC DATA LOADER — Fetches from API and renders all sections =======
+async function loadSiteData() {
+  try {
+    const res = await fetch('/api/public/site');
+    if (!res.ok) return;
+    const data = await res.json();
+    const artists = data.artists || [];
+    renderChannels(artists);
+    renderArtists(artists);
+    renderReleases(data.releases || []);
+    renderUpcoming(data.upcoming || []);
+    renderVideos(data.videos || []);
+    renderPopup(data.popup);
+    // Update marquees with real artist names
+    buildMarquees(artists);
+  } catch(e) { console.warn('API not available, using static content', e); }
+}
+
+// SVG icons for platforms (small, inline)
+const PLATFORM_SVGS = {
+  spotify: '<svg viewBox="0 0 24 24" fill="#1DB954" width="16" height="16"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="#FF0000" width="16" height="16"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" fill="#00F2EA" width="16" height="16"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24" fill="#E4405F" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>',
+  appleMusic: '<svg viewBox="0 0 24 24" fill="#FA243C" width="16" height="16"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043A5.022 5.022 0 0019.7.165 10.18 10.18 0 0018.04.006C17.37-.006 16.67 0 16 0H8c-.69 0-1.38-.004-2.06.02A9.57 9.57 0 004 .37 4.94 4.94 0 002.18 1.41C1.31 2.1.65 2.94.37 3.97A8.56 8.56 0 00.01 5.93C0 6.6 0 7.28 0 7.94v8.12c0 .68 0 1.36.01 2.03a9.27 9.27 0 00.37 2.01c.28 1.02.94 1.86 1.81 2.55a4.94 4.94 0 001.82 1.04c.64.18 1.3.28 1.97.31.7.02 1.38.02 2.06.02h8c.68 0 1.36 0 2.04-.02a9.57 9.57 0 001.94-.31 4.94 4.94 0 001.82-1.04c.86-.7 1.5-1.54 1.81-2.55.18-.64.28-1.3.31-1.97.02-.68.02-1.36.02-2.04V8c0-.68 0-1.36-.02-2.04z"/></svg>',
+};
+
+// ======= CHANNELS V2 — Cinematic horizontal scroll =======
+const CH_MARKET_TAG = {
+  'LATIN': { bg: '#FF00B4', text: '#fff' },
+  'K-POP': { bg: '#00E5FF', text: '#000' },
+  'J-POP': { bg: '#FF5500', text: '#fff' },
+  'USA':   { bg: '#1DB954', text: '#000' },
+};
+const CH_PLATFORM_CFG = [
+  { key: 'spotify',    svg: PLATFORM_SVGS.spotify,    color: '#1DB954', label: 'Spotify' },
+  { key: 'appleMusic', svg: PLATFORM_SVGS.appleMusic, color: '#FA243C', label: 'Apple Music' },
+  { key: 'youtube',    svg: PLATFORM_SVGS.youtube,    color: '#FF0000', label: 'YouTube' },
+  { key: 'tiktok',     svg: PLATFORM_SVGS.tiktok,     color: '#00F2EA', label: 'TikTok' },
+  { key: 'instagram',  svg: PLATFORM_SVGS.instagram,  color: '#E4405F', label: 'Instagram' },
+];
+const CH_FALLBACK_IMGS = ['vid1_hd_02.jpg','vid2_hd_02.jpg','vid3_hd_02.jpg','vid1_hd_04.jpg','vid2_hd_04.jpg','vid3_hd_04.jpg','vid1_hd_08.jpg','vid2_hd_08.jpg'];
+
+function renderChannels(artists) {
+  const scroll = document.getElementById('channelsScroll');
+  if (!scroll) return;
+  const activeArtists = artists.filter(a => a.active);
+  if (!activeArtists.length) return;
+
+  scroll.innerHTML = activeArtists.map((a, i) => {
+    const img = a.image || `public/assets/frames/${CH_FALLBACK_IMGS[i % CH_FALLBACK_IMGS.length]}`;
+    const market = a.market || 'LATIN';
+    const tag = CH_MARKET_TAG[market] || { bg: 'var(--zv-cyan)', text: '#000' };
+    const num = String(i + 1).padStart(2, '0');
+
+    const platforms = CH_PLATFORM_CFG
+      .filter(p => a[p.key])
+      .map(p => `<a href="${a[p.key]}" target="_blank" rel="noopener" title="${p.label}" data-color="${p.color}" onmouseover="this.style.boxShadow='0 0 14px ${p.color}30';this.style.borderColor='${p.color}40'" onmouseout="this.style.boxShadow='none';this.style.borderColor='rgba(255,255,255,0.08)'">${p.svg}</a>`)
+      .join('');
+
+    return `
+    <article class="channel-card-v2" data-idx="${i}" onmouseenter="tilt3DEnter(this)" onmousemove="tilt3DMove(event,this)" onmouseleave="tilt3DLeave(this)">
+      <div class="card-inner">
+        <img src="${img}" alt="${a.name}" class="card-bg" loading="lazy" />
+        <span class="card-market" style="background:${tag.bg};color:${tag.text};">${market}</span>
+        <span class="card-number">${num}</span>
+        <div class="card-glass">
+          <div class="card-info-zone">
+            <span class="card-flag">${a.flag || '🇲🇽'}</span>
+            <h4 class="card-name">${a.name}</h4>
+            <span class="card-genre">${a.genre || ''}</span>
+          </div>
+          ${platforms ? `<div class="card-platform-zone"><div class="card-platforms">${platforms}</div></div>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  // Build scroll dots
+  buildScrollDots(activeArtists.length);
+  // Init scroll observer + auto-scroll
+  initChannelScrollObserver();
+  initChannelAutoScroll();
+  // Apply 3D tilt for new cards
+  setTimeout(() => {
+    gsap.from('.channel-card-v2', {
+      opacity: 0, y: 60, scale: 0.92, rotateY: 8,
+      stagger: 0.08, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#channelsSection', start: 'top 75%' }
+    });
+  }, 100);
+
+  // Also render old grid as hidden fallback
+  renderChannelsOld(artists);
+}
+
+function renderChannelsOld(artists) {
+  const grid = document.getElementById('channelsGrid');
+  if (!grid) return;
+  grid.innerHTML = artists.filter(a => a.active).map((a, i) => {
+    const img = a.image || `public/assets/frames/${CH_FALLBACK_IMGS[i % CH_FALLBACK_IMGS.length]}`;
+    const market = a.market || 'LATIN';
+    const tag = CH_MARKET_TAG[market] || { bg: 'var(--zv-cyan)', text: '#000' };
+    const platforms = CH_PLATFORM_CFG.filter(p => a[p.key])
+      .map(p => `<a href="${a[p.key]}" target="_blank" rel="noopener" title="${p.label}" class="channel-platform-icon" style="background:${p.color}20;border:1px solid ${p.color}40;">${p.svg}</a>`).join('');
+    return `<article class="channel-card"><img src="${img}" alt="${a.name}" class="channel-card-img" loading="lazy" /><span class="channel-tag" style="background:${tag.bg};color:${tag.text};">${market}</span><div class="channel-card-content"><span class="channel-flag">${a.flag || '🇲🇽'}</span><h4 class="channel-name">${a.name}</h4><span class="channel-genre">${a.genre || ''}</span>${platforms ? `<div class="channel-platforms">${platforms}</div>` : ''}</div></article>`;
+  }).join('');
+}
+
+// ======= SCROLL NAV FOR CHANNELS =======
+function buildScrollDots(count) {
+  const dotsEl = document.getElementById('chScrollDots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'ch-scroll-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => scrollToChannel(i);
+    dotsEl.appendChild(dot);
+  }
+}
+
+function scrollChannels(dir) {
+  const scroll = document.getElementById('channelsScroll');
+  if (!scroll) return;
+  const card = scroll.querySelector('.channel-card-v2');
+  if (!card) return;
+  const cardW = card.offsetWidth + 24; // gap
+  scroll.scrollBy({ left: dir * cardW * 2, behavior: 'smooth' });
+}
+
+function scrollToChannel(idx) {
+  const scroll = document.getElementById('channelsScroll');
+  const cards = scroll.querySelectorAll('.channel-card-v2');
+  if (cards[idx]) cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+function initChannelScrollObserver() {
+  const scroll = document.getElementById('channelsScroll');
+  if (!scroll) return;
+  scroll.addEventListener('scroll', () => {
+    const cards = scroll.querySelectorAll('.channel-card-v2');
+    const dots = document.querySelectorAll('.ch-scroll-dot');
+    const scrollCenter = scroll.scrollLeft + scroll.offsetWidth / 2;
+    let closest = 0, closestDist = Infinity;
+    cards.forEach((card, i) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const dist = Math.abs(scrollCenter - cardCenter);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === closest));
+  }, { passive: true });
+}
+
+// ======= CHANNELS INFINITE AUTO-SCROLL =======
+let chAutoScrollRAF = null;
+let chAutoScrollPaused = false;
+const CH_SCROLL_SPEED = 0.6; // px per frame — smooth and chill
+
+function initChannelAutoScroll() {
+  const scroll = document.getElementById('channelsScroll');
+  if (!scroll) return;
+
+  // Clone all cards for seamless infinite loop
+  const originalCards = Array.from(scroll.querySelectorAll('.channel-card-v2'));
+  if (!originalCards.length) return;
+
+  // Duplicate the set so there's always content ahead
+  originalCards.forEach(card => {
+    const clone = card.cloneNode(true);
+    clone.classList.add('ch-clone');
+    scroll.appendChild(clone);
+  });
+
+  // Track the width of the original set (before clones)
+  let originalWidth = 0;
+  function measureOriginalWidth() {
+    const gap = 24; // matches CSS gap 1.5rem ≈ 24px
+    originalWidth = originalCards.reduce((sum, c) => sum + c.offsetWidth + gap, 0);
+  }
+  measureOriginalWidth();
+  window.addEventListener('resize', measureOriginalWidth);
+
+  // Pause on hover / touch
+  scroll.addEventListener('mouseenter', () => { chAutoScrollPaused = true; });
+  scroll.addEventListener('mouseleave', () => { chAutoScrollPaused = false; });
+  scroll.addEventListener('touchstart', () => { chAutoScrollPaused = true; }, { passive: true });
+  scroll.addEventListener('touchend', () => {
+    setTimeout(() => { chAutoScrollPaused = false; }, 3000);
+  }, { passive: true });
+
+  // Pause when nav buttons clicked
+  document.querySelectorAll('.ch-scroll-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      chAutoScrollPaused = true;
+      setTimeout(() => { chAutoScrollPaused = false; }, 4000);
+    });
+  });
+
+  function autoScrollTick() {
+    if (!chAutoScrollPaused) {
+      scroll.scrollLeft += CH_SCROLL_SPEED;
+
+      // Seamless reset: when we've scrolled past the original set, jump back
+      if (scroll.scrollLeft >= originalWidth) {
+        scroll.scrollLeft -= originalWidth;
+      }
+    }
+    chAutoScrollRAF = requestAnimationFrame(autoScrollTick);
+  }
+
+  // Start after initial animations settle
+  setTimeout(() => {
+    chAutoScrollRAF = requestAnimationFrame(autoScrollTick);
+  }, 2500);
+}
+
+// ======= 3D TILT EFFECT =======
+function tilt3DEnter(el) {
+  el.style.transition = 'transform 0.1s ease-out';
+}
+function tilt3DMove(e, el) {
+  const rect = el.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  const rotY = (x - 0.5) * 12;  // -6 to 6 deg
+  const rotX = (0.5 - y) * 8;   // -4 to 4 deg
+  el.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02,1.02,1.02)`;
+}
+function tilt3DLeave(el) {
+  el.style.transition = 'transform 0.4s ease-out';
+  el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+}
+
+// ======= FILM GRAIN GENERATOR =======
+function generateGrain() {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(256, 256);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = Math.random() * 255;
+    img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v;
+    img.data[i+3] = 15; // very subtle alpha
+  }
+  ctx.putImageData(img, 0, 0);
+  const overlay = document.getElementById('grainOverlay');
+  if (overlay) overlay.style.backgroundImage = `url(${c.toDataURL()})`;
+}
+
+// ======= MARQUEE CONTENT BUILDER =======
+function buildMarquees(artists) {
+  const names = artists.filter(a => a.active).map(a => a.name);
+  const m1Items = ['NOW STREAMING', ...names, 'ZV RECORDS', 'GLOBAL MUSIC', ...names].join('</span><span class="marquee-dot"></span><span>');
+  const m1Content = `<span>${m1Items}</span>`;
+  const m1Full = m1Content + m1Content; // duplicate for seamless loop
+
+  const m2Items = ['LATIN', 'K-POP', 'J-POP', 'URBAN', 'TRAP', 'POP', 'R&B', 'ELECTRONIC', 'HIP HOP', 'ALTERNATIVE', 'ROCK', 'REGGAETON'].join('</span><span class="marquee-dot"></span><span>');
+  const m2Content = `<span>${m2Items}</span>`;
+  const m2Full = m2Content + m2Content;
+
+  const m3Items = ['EST. 2024', 'ZV PRODUCTION CO.', 'RECORDS', 'WORLDWIDE', 'PREMIUM SOUND', 'NEXT GEN MUSIC', 'ANALOG + DIGITAL', 'STUDIO QUALITY'].join('</span><span class="marquee-dot"></span><span>');
+  const m3Content = `<span>${m3Items}</span>`;
+  const m3Full = m3Content + m3Content;
+
+  const m4Items = [...names, 'NEW RELEASES', 'FOLLOW US', ...names, 'SUBSCRIBE'].join('</span><span class="marquee-dot"></span><span>');
+  const m4Content = `<span>${m4Items}</span>`;
+  const m4Full = m4Content + m4Content;
+
+  ['marquee1','marquee2','marquee3','marquee4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = [m1Full, m2Full, m3Full, m4Full][i];
+  });
+}
+
+// ======= TEXT REVEAL ANIMATION =======
+function initTextReveals() {
+  document.querySelectorAll('.text-reveal-target').forEach(el => {
+    // Split text into characters preserving HTML (spans for color)
+    const html = el.innerHTML;
+    // We wrap each text node's characters in spans
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+
+    function wrapChars(node) {
+      if (node.nodeType === 3) { // text node
+        const text = node.textContent;
+        const frag = document.createDocumentFragment();
+        for (const ch of text) {
+          if (ch === '\n' || ch === '\r') continue;
+          const span = document.createElement('span');
+          span.className = 'char';
+          span.textContent = ch === ' ' ? '\u00A0' : ch;
+          frag.appendChild(span);
+        }
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === 1) {
+        // Element node — wrap children, keep the element
+        Array.from(node.childNodes).forEach(wrapChars);
+      }
+    }
+
+    Array.from(wrapper.childNodes).forEach(wrapChars);
+    el.innerHTML = '';
+    el.classList.add('text-reveal-line');
+    while (wrapper.firstChild) el.appendChild(wrapper.firstChild);
+  });
+}
+
+function renderArtists(artists) {
+  const active = artists.filter(a => a.active);
+  const featured = active.find(a => a.featured) || active[0];
+  if (!featured) return;
+
+  // Featured artist
+  const featEl = document.getElementById('artistFeatured');
+  if (featEl) {
+    const lang = currentLang || 'en';
+    const bio = featured['bio' + lang.charAt(0).toUpperCase() + lang.slice(1)] || featured.bioEn || featured.bio || '';
+    featEl.innerHTML = `
+      <img src="${featured.image || 'public/assets/frames/vid1_hd_05.jpg'}" alt="${featured.name}" />
+      <span class="artist-featured-number">01</span>
+      <div class="artist-featured-content">
+        <span class="artist-featured-tag">${featured.genre || ''}</span>
+        <h3 class="artist-featured-name">${featured.name}</h3>
+        <p class="artist-featured-bio">${bio}</p>
+        <div class="artist-featured-links">
+          ${featured.spotify ? `<a href="${featured.spotify}" target="_blank" title="Spotify"><svg viewBox="0 0 24 24" fill="#1DB954" width="20" height="20"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></a>` : ''}
+          ${featured.youtube ? `<a href="${featured.youtube}" target="_blank" title="YouTube"><svg viewBox="0 0 24 24" fill="#FF0000" width="20" height="20"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>` : ''}
+          ${featured.tiktok ? `<a href="${featured.tiktok}" target="_blank" title="TikTok"><svg viewBox="0 0 24 24" fill="#00F2EA" width="20" height="20"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/></svg></a>` : ''}
+          ${featured.instagram ? `<a href="${featured.instagram}" target="_blank" title="Instagram"><svg viewBox="0 0 24 24" fill="#E4405F" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>` : ''}
+          ${featured.appleMusic ? `<a href="${featured.appleMusic}" target="_blank" title="Apple Music"><svg viewBox="0 0 24 24" fill="#FA243C" width="20" height="20"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043A5.022 5.022 0 0019.7.165 10.18 10.18 0 0018.04.006C17.37-.006 16.67 0 16 0H8c-.69 0-1.38-.004-2.06.02A9.57 9.57 0 004 .37 4.94 4.94 0 002.18 1.41C1.31 2.1.65 2.94.37 3.97A8.56 8.56 0 00.01 5.93C0 6.6 0 7.28 0 7.94v8.12c0 .68 0 1.36.01 2.03a9.27 9.27 0 00.37 2.01c.28 1.02.94 1.86 1.81 2.55a4.94 4.94 0 001.82 1.04c.64.18 1.3.28 1.97.31.7.02 1.38.02 2.06.02h8c.68 0 1.36 0 2.04-.02a9.57 9.57 0 001.94-.31 4.94 4.94 0 001.82-1.04c.86-.7 1.5-1.54 1.81-2.55.18-.64.28-1.3.31-1.97.02-.68.02-1.36.02-2.04V8c0-.68 0-1.36-.02-2.04zM17.5 17.5a.75.75 0 01-.75.75h-1a.75.75 0 01-.75-.75v-5.5l-5 1.5v4a.75.75 0 01-.75.75h-1a.75.75 0 01-.75-.75v-8a.75.75 0 01.55-.72l7-2a.75.75 0 01.95.72v10z"/></svg></a>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // Row artists (exclude featured)
+  const rest = active.filter(a => a.id !== featured.id).slice(0, 3);
+  const row = document.getElementById('artistsRow');
+  if (row && rest.length) {
+    row.innerHTML = rest.map((a, i) => {
+      const bio = a['bio' + (currentLang || 'en').charAt(0).toUpperCase() + (currentLang || 'en').slice(1)] || a.bioEn || a.bio || '';
+      return `
+      <div class="artist-row-card">
+        <img src="${a.image || 'public/assets/frames/vid2_hd_06.jpg'}" alt="${a.name}" />
+        <span class="artist-row-num">0${i + 2}</span>
+        <div class="artist-row-content">
+          <span class="artist-row-genre">${a.genre || ''}</span>
+          <h3 class="artist-row-name">${a.name}</h3>
+          <p class="artist-row-bio">${bio}</p>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function formatReleaseDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function renderReleases(releases) {
+  const active = releases.filter(r => r.active !== false);
+  if (!active.length) return;
+
+  const featured = active.find(r => r.featured) || active[0];
+  const featEl = document.getElementById('releaseFeatured');
+  if (featEl && featured) {
+    const cover = featured.cover || 'public/assets/frames/vid1_hd_03.jpg';
+    featEl.innerHTML = `
+      <img src="${cover}" alt="${featured.title}" class="release-featured-bg" id="relFeatBg" />
+      <div class="release-featured-overlay"></div>
+      <span class="release-featured-number">01</span>
+      <div class="release-featured-content">
+        <div class="release-featured-cover">
+          <img src="${cover}" alt="${featured.title}" />
+          <div class="release-featured-playing">
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+          </div>
+        </div>
+        <div class="release-featured-info">
+          <span class="release-featured-badge">${(featured.type || 'single').toUpperCase()}</span>
+          <h3 class="release-featured-title">${featured.title}</h3>
+          <span class="release-featured-artist">${featured.artist?.name || ''}</span>
+          <span class="release-featured-date">${formatReleaseDate(featured.date)}</span>
+          <div class="release-featured-platforms">
+            ${featured.spotify ? `<a href="${featured.spotify}" target="_blank" class="platform-btn primary">${PLATFORM_SVGS.spotify} Spotify</a>` : ''}
+            ${featured.appleMusic ? `<a href="${featured.appleMusic}" target="_blank" class="platform-btn">${PLATFORM_SVGS.appleMusic} Apple Music</a>` : ''}
+            ${featured.youtubeMusic ? `<a href="${featured.youtubeMusic}" target="_blank" class="platform-btn">${PLATFORM_SVGS.youtube} YouTube</a>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Parallax on featured bg
+    setTimeout(() => {
+      const bg = document.getElementById('relFeatBg');
+      if (bg && typeof gsap !== 'undefined') {
+        gsap.to(bg, {
+          yPercent: 12, scale: 1.08, ease: 'none',
+          scrollTrigger: { trigger: featEl, start: 'top bottom', end: 'bottom top', scrub: 0.5 }
+        });
+      }
+    }, 200);
+  }
+
+  // Grid releases — vertical cards with cover prominent
+  const rest = active.filter(r => r.id !== featured?.id);
+  const grid = document.getElementById('releasesGrid');
+  if (grid && rest.length) {
+    grid.innerHTML = rest.map(r => `
+      <article class="release-card">
+        <div class="release-card-cover">
+          <img src="${r.cover || 'public/assets/frames/vid2_hd_03.jpg'}" alt="${r.title}" loading="lazy" />
+          <span class="release-card-badge">${(r.type || 'single').toUpperCase()}</span>
+        </div>
+        <div class="release-card-info">
+          <h3 class="release-card-title">${r.title}</h3>
+          <span class="release-card-artist">${r.artist?.name || ''}</span>
+        </div>
+      </article>
+    `).join('');
+  }
+}
+
+function renderUpcoming(upcoming) {
+  const active = upcoming.filter(u => u.active !== false);
+  const grid = document.querySelector('.upcoming-grid');
+  if (!grid || !active.length) return;
+  grid.innerHTML = active.map(u => `
+    <article class="upcoming-card">
+      <div class="upcoming-card-top">
+        <img src="${u.cover || 'public/assets/frames/vid2_hd_07.jpg'}" alt="${u.title}" />
+        <span class="upcoming-badge" data-i18n="upcoming.new">NEW</span>
+      </div>
+      <div class="upcoming-card-body">
+        <h4 class="upcoming-card-title">${u.title}</h4>
+        <span class="upcoming-card-artist">${u.artistName || ''}</span>
+        <div class="countdown" data-date="${u.date}T00:00:00">
+          <div class="countdown-item">
+            <span class="countdown-num cd-days">--</span>
+            <span class="countdown-label" data-i18n="cd.days">DAYS</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num cd-hours">--</span>
+            <span class="countdown-label" data-i18n="cd.hours">HRS</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num cd-mins">--</span>
+            <span class="countdown-label" data-i18n="cd.mins">MIN</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num cd-secs">--</span>
+            <span class="countdown-label" data-i18n="cd.secs">SEC</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  // Re-apply i18n to new elements
+  if (currentLang) setLang(currentLang);
+  updateCountdowns();
+}
+
+function renderVideos(videos) {
+  const active = videos.filter(v => v.active !== false);
+  const list = document.querySelector('.videos-list');
+  if (!list || !active.length) return;
+  list.innerHTML = active.map(v => `
+    <article class="video-card" onclick="openVideo('${v.youtubeId}')">
+      <div class="video-thumb">
+        <img src="https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg" alt="${v.title}" loading="lazy" />
+        <div class="video-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="video-info">
+        <span class="video-label">${(v.type || 'mv').toUpperCase()}</span>
+        <h3 class="video-title">${v.title}</h3>
+        <span class="video-meta">${v.artist?.name || ''} · ${new Date(v.createdAt).getFullYear()}</span>
+      </div>
+    </article>
+  `).join('');
+}
+
+function renderPopup(popup) {
+  if (!popup || !popup.enabled) return;
+  const coverEl = document.querySelector('.nr-sleeve-img');
+  const titleEl = document.querySelector('.nr-title');
+  const artistEl = document.querySelector('.nr-artist');
+  const badgeEl = document.querySelector('.nr-new-badge');
+  const listenBtn = document.querySelector('.nr-btn-primary');
+
+  if (coverEl && popup.cover) coverEl.src = popup.cover;
+  if (titleEl) titleEl.textContent = popup.title || 'NEW RELEASE';
+  if (artistEl) artistEl.textContent = popup.artistName || '';
+  if (badgeEl && popup.badgeText) badgeEl.textContent = popup.badgeText;
+  if (listenBtn && popup.listenUrl) {
+    listenBtn.onclick = () => window.open(popup.listenUrl, '_blank');
+  }
+
+  // Only show popup if enabled
+  setTimeout(() => showNewRelease(), 3000);
+}
+
+// Load on page ready
+let currentLang = 'en';
+document.addEventListener('DOMContentLoaded', () => {
+  // Generate film grain texture
+  generateGrain();
+  // Init text reveal (split chars) — must run before GSAP animates them
+  initTextReveals();
+  // Build marquees with fallback names (API will update with real data)
+  buildMarquees([
+    { active: true, name: 'VELOZ' }, { active: true, name: 'LUNA ROJA' },
+    { active: true, name: 'NOVA' }, { active: true, name: 'HIKARU' },
+    { active: true, name: 'SORA' }, { active: true, name: 'MINJUN' },
+    { active: true, name: 'ECHO' }, { active: true, name: 'YUKI' },
+  ]);
+  // Load real data from API
+  loadSiteData();
+});
+
+// ======= GSAP ANIMATIONS =======
+window.addEventListener('load', () => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // --- HERO: Canvas scroll sequence (192 frames @ 24fps) ---
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  const frameCount = 192;
+  const images = new Array(frameCount);
+  const frameSeq = { frame: 0 };
+  let canvasW = 0, canvasH = 0;
+  let currentFrame = -1;
+
+  // Set canvas size once, update on resize
+  function setCanvasSize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvasW = window.innerWidth;
+    canvasH = window.innerHeight;
+    canvas.width = canvasW * dpr;
+    canvas.height = canvasH * dpr;
+    canvas.style.width = canvasW + 'px';
+    canvas.style.height = canvasH + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  setCanvasSize();
+
+  function drawFrame(index) {
+    if (index === currentFrame) return; // Skip if same frame
+    const img = images[Math.min(index, frameCount - 1)];
+    if (!img || !img.complete) return;
+    currentFrame = index;
+
+    const scale = Math.max(canvasW / img.width, canvasH / img.height);
+    const w = img.width * scale;
+    const h = img.height * scale;
+    ctx.drawImage(img, (canvasW - w) / 2, (canvasH - h) / 2, w, h);
+  }
+
+  // Preload: load first 10 frames immediately, rest in background
+  let loadedCount = 0;
+  function loadImage(i) {
+    const img = new Image();
+    img.src = 'public/assets/sequence/frame_' + String(i + 1).padStart(3, '0') + '.jpg';
+    img.onload = () => {
+      loadedCount++;
+      if (i === 0) drawFrame(0); // Show first frame ASAP
+      if (loadedCount === frameCount) initHeroSequence();
+    };
+    images[i] = img;
+  }
+
+  // Load first 10 frames immediately
+  for (let i = 0; i < Math.min(10, frameCount); i++) loadImage(i);
+  // Load rest after a small delay to not block rendering
+  setTimeout(() => {
+    for (let i = 10; i < frameCount; i++) loadImage(i);
+  }, 100);
+
+  function initHeroSequence() {
+    gsap.to(frameSeq, {
+      frame: frameCount - 1,
+      snap: 'frame',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3, // Tighter scrub = more responsive
+      },
+      onUpdate: () => drawFrame(Math.round(frameSeq.frame)),
+    });
+  }
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      setCanvasSize();
+      currentFrame = -1; // Force redraw
+      drawFrame(Math.round(frameSeq.frame));
+    }, 150);
+  });
+
+  // --- Hero content: fade out on scroll ---
+  gsap.to('.hero-content', {
+    opacity: 0,
+    y: -100,
+    scale: 0.9,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: '+=40%',
+      scrub: 0.8,
+    }
+  });
+
+  gsap.to('.scroll-hint', {
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: '+=20%',
+      scrub: 0.5,
+    }
+  });
+
+  // --- STUDIO: Parallax background + text reveal ---
+  const studioBg = document.getElementById('studioBg');
+  if (studioBg) {
+    gsap.to(studioBg, {
+      yPercent: 20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.studio-hero',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+      }
+    });
+  }
+
+  gsap.from('#studio .studio-text', {
+    opacity: 0, y: 60,
+    duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.studio-hero', start: 'top 60%' }
+  });
+
+  // --- TEXT REVEAL: Animate chars on scroll ---
+  document.querySelectorAll('.text-reveal-line').forEach(el => {
+    const chars = el.querySelectorAll('.char');
+    if (chars.length) {
+      gsap.to(chars, {
+        y: 0, opacity: 1,
+        stagger: 0.02,
+        duration: 0.6,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' }
+      });
+    }
+  });
+
+  // --- CHANNELS V2: Scroll-triggered entrance (handled in renderChannels) ---
+
+  // --- ARTISTAS: Featured with parallax ---
+  const featImg = document.querySelector('.artist-featured img');
+  if (featImg) {
+    gsap.to(featImg, {
+      yPercent: 12, scale: 1.05,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.artist-featured',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+      }
+    });
+  }
+
+  gsap.from('.artist-featured', {
+    opacity: 0, scale: 1.05,
+    duration: 1.2, ease: 'power3.out',
+    scrollTrigger: { trigger: '#artistas', start: 'top 70%' }
+  });
+  gsap.from('.artist-featured-content > *', {
+    opacity: 0, y: 30,
+    stagger: 0.1, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '.artist-featured', start: 'top 60%' }
+  });
+  gsap.from('.artist-row-card', {
+    opacity: 0, y: 40,
+    stagger: 0.12, duration: 0.7, ease: 'power3.out',
+    scrollTrigger: { trigger: '.artists-row', start: 'top 80%' }
+  });
+
+  // --- Artist row images: Parallax ---
+  document.querySelectorAll('.artist-row-card img').forEach(img => {
+    gsap.to(img, {
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: img.closest('.artist-row-card'),
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+      }
+    });
+  });
+
+  // --- RELEASES: Featured + grid + parallax ---
+  const relCover = document.querySelector('.release-featured-cover img');
+  if (relCover) {
+    gsap.to(relCover, {
+      yPercent: 8, scale: 1.03,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.release-featured',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+      }
+    });
+  }
+
+  gsap.from('.release-featured', {
+    opacity: 0, y: 50,
+    duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.release-featured', start: 'top 80%' }
+  });
+  gsap.from('.release-card', {
+    opacity: 0, x: -30,
+    stagger: 0.1, duration: 0.6, ease: 'power3.out',
+    scrollTrigger: { trigger: '.releases-grid', start: 'top 85%' }
+  });
+  gsap.from('.upcoming-card', {
+    opacity: 0, y: 40, scale: 0.97,
+    stagger: 0.15, duration: 0.7, ease: 'power3.out',
+    scrollTrigger: { trigger: '#upcomingSection', start: 'top 80%' }
+  });
+
+  // --- VIDEOS: Staggered entrance + parallax on thumbnails ---
+  gsap.from('.video-card', {
+    opacity: 0, y: 60, scale: 0.95,
+    stagger: 0.15, ease: 'power3.out', duration: 0.8,
+    scrollTrigger: { trigger: '#videos', start: 'top 80%' }
+  });
+  // Parallax on video thumbnails
+  document.querySelectorAll('.video-thumb img').forEach(img => {
+    gsap.to(img, {
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: img.closest('.video-card'),
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+      }
+    });
+  });
+
+  // --- MARQUEE TICKERS: Fade in ---
+  gsap.utils.toArray('.marquee-ticker').forEach(m => {
+    gsap.from(m, {
+      opacity: 0, duration: 0.8,
+      scrollTrigger: { trigger: m, start: 'top 95%' }
+    });
+  });
+
+  // --- Section headers: Fade in ---
+  gsap.utils.toArray('.section-header').forEach(header => {
+    gsap.from(header, {
+      opacity: 0, y: 30,
+      duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: header, start: 'top 85%' }
+    });
+  });
+
+  // --- Floating orbs: subtle parallax ---
+  gsap.utils.toArray('.glow-orb').forEach(orb => {
+    gsap.to(orb, {
+      yPercent: gsap.utils.random(-30, 30),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: orb.closest('section') || orb.parentElement,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.5,
+      }
+    });
+  });
+});
+
+// ======= NAVBAR SCROLL =======
+window.addEventListener('scroll', () => {
+  document.getElementById('siteNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ======= VIDEO MODAL =======
+function openVideo(videoId) {
+  document.getElementById('modalIframe').src =
+    'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+  document.getElementById('videoModal').classList.add('active');
+}
+function closeVideo() {
+  document.getElementById('modalIframe').src = '';
+  document.getElementById('videoModal').classList.remove('active');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideo(); });
+
+// ======= i18n — 3 LANGUAGES =======
+const i18n = {
+  en: {
+    'hero.scroll': 'SCROLL',
+    'nav.studio': 'Studio', 'nav.artists': 'Artists', 'nav.releases': 'Releases',
+    'nav.videos': 'Videos', 'nav.contact': 'Contact',
+    'studio.label': 'THE STUDIO', 'studio.heading': 'Where music<br/>is born.',
+    'studio.body': 'World-class facilities with recording booths, analog consoles and cutting-edge equipment.',
+    'studio.a': 'STUDIO A', 'studio.b': 'STUDIO B', 'studio.mastering': 'MASTERING',
+    'artists.label': 'ROSTER', 'artists.title': 'Our <span class="text-cyan">Artists</span>',
+    'artist.veloz.genre': 'REGGAETON · URBAN', 'artist.veloz.bio': 'The future of reggaeton with electronic beats that break boundaries.',
+    'artist.luna.genre': 'TRAP · ALTERNATIVE', 'artist.luna.bio': 'Trap with soul, raw lyrics and beats that hit the heart.',
+    'artist.nova.genre': 'LATIN POP · R&B', 'artist.nova.bio': 'The voice of modern latin pop you can\'t get out of your head.',
+    'releases.label': 'DISCOGRAPHY', 'releases.title': 'Latest <span class="text-magenta">Releases</span>',
+    'videos.label': 'CONTENT', 'videos.title': 'Featured <span class="text-cyan">Videos</span>',
+    'video.type.mv': 'OFFICIAL MV',
+    'channels.label': 'OUR CHANNELS', 'channels.title': 'Global <span class="text-cyan">Talent</span>',
+    'upcoming.label': 'COMING SOON', 'upcoming.title': 'Upcoming <span class="text-cyan">Drops</span>',
+    'upcoming.new': 'NEW',
+    'cd.days': 'DAYS', 'cd.hours': 'HRS', 'cd.mins': 'MIN', 'cd.secs': 'SEC',
+    'popup.badge': '🔥 NEW RELEASE', 'popup.label': 'OUT NOW', 'popup.listen': '▶ Listen Now', 'popup.later': 'Maybe Later',
+    'footer.home': 'Home',
+    'footer.sub': 'PRODUCTION CO. · RECORDS · EST. 2024',
+    'footer.copy': '© 2024 ZV Production Co. Records. All rights reserved.',
+  },
+  es: {
+    'hero.scroll': 'DESLIZA',
+    'nav.studio': 'Estudio', 'nav.artists': 'Artistas', 'nav.releases': 'Lanzamientos',
+    'nav.videos': 'Videos', 'nav.contact': 'Contacto',
+    'studio.label': 'EL ESTUDIO', 'studio.heading': 'Donde nace<br/>la música.',
+    'studio.body': 'Instalaciones world-class con cabinas de grabación, consolas analógicas y equipo de última generación.',
+    'studio.a': 'ESTUDIO A', 'studio.b': 'ESTUDIO B', 'studio.mastering': 'MASTERING',
+    'artists.label': 'ROSTER', 'artists.title': 'Nuestros <span class="text-cyan">Artistas</span>',
+    'artist.veloz.genre': 'REGGAETÓN · URBANO', 'artist.veloz.bio': 'El futuro del reggaetón con beats electrónicos que rompen fronteras.',
+    'artist.luna.genre': 'TRAP · ALTERNATIVO', 'artist.luna.bio': 'Trap con alma, lírica cruda y beats que golpean el corazón.',
+    'artist.nova.genre': 'POP LATINO · R&B', 'artist.nova.bio': 'La voz del pop latino moderno que no puedes sacar de tu cabeza.',
+    'releases.label': 'DISCOGRAFÍA', 'releases.title': 'Últimos <span class="text-magenta">Lanzamientos</span>',
+    'videos.label': 'CONTENIDO', 'videos.title': 'Videos <span class="text-cyan">Destacados</span>',
+    'video.type.mv': 'VIDEO OFICIAL',
+    'channels.label': 'NUESTROS CANALES', 'channels.title': 'Talento <span class="text-cyan">Global</span>',
+    'upcoming.label': 'PRÓXIMAMENTE', 'upcoming.title': 'Próximos <span class="text-cyan">Lanzamientos</span>',
+    'upcoming.new': 'NUEVO',
+    'cd.days': 'DÍAS', 'cd.hours': 'HRS', 'cd.mins': 'MIN', 'cd.secs': 'SEG',
+    'popup.badge': '🔥 NUEVO LANZAMIENTO', 'popup.label': 'DISPONIBLE YA', 'popup.listen': '▶ Escuchar Ahora', 'popup.later': 'Quizá Después',
+    'footer.home': 'Inicio',
+    'footer.sub': 'PRODUCCIÓN · DISQUERA · EST. 2024',
+    'footer.copy': '© 2024 ZV Production Co. Records. Todos los derechos reservados.',
+  },
+  ja: {
+    'hero.scroll': 'スクロール',
+    'nav.studio': 'スタジオ', 'nav.artists': 'アーティスト', 'nav.releases': 'リリース',
+    'nav.videos': 'ビデオ', 'nav.contact': 'お問合せ',
+    'studio.label': 'スタジオ', 'studio.heading': '音楽が<br/>生まれる場所。',
+    'studio.body': 'レコーディングブース、アナログコンソール、最先端機材を備えたワールドクラスの施設。',
+    'studio.a': 'スタジオ A', 'studio.b': 'スタジオ B', 'studio.mastering': 'マスタリング',
+    'artists.label': 'ロスター', 'artists.title': '私たちの<span class="text-cyan">アーティスト</span>',
+    'artist.veloz.genre': 'レゲトン · アーバン', 'artist.veloz.bio': '境界を打ち破るエレクトロニックビートで、レゲトンの未来を切り開く。',
+    'artist.luna.genre': 'トラップ · オルタナティブ', 'artist.luna.bio': '魂のこもったトラップ、生々しいリリック、心を打つビート。',
+    'artist.nova.genre': 'ラテンポップ · R&B', 'artist.nova.bio': '頭から離れないモダンラテンポップの声。',
+    'releases.label': 'ディスコグラフィー', 'releases.title': '最新<span class="text-magenta">リリース</span>',
+    'videos.label': 'コンテンツ', 'videos.title': '注目の<span class="text-cyan">ビデオ</span>',
+    'video.type.mv': '公式MV',
+    'channels.label': 'チャンネル', 'channels.title': 'グローバル<span class="text-cyan">タレント</span>',
+    'upcoming.label': '近日公開', 'upcoming.title': '次の<span class="text-cyan">リリース</span>',
+    'upcoming.new': 'NEW',
+    'cd.days': '日', 'cd.hours': '時間', 'cd.mins': '分', 'cd.secs': '秒',
+    'popup.badge': '🔥 新リリース', 'popup.label': '配信中', 'popup.listen': '▶ 今すぐ聴く', 'popup.later': 'あとで',
+    'footer.home': 'ホーム',
+    'footer.sub': 'プロダクション · レコード · 設立 2024',
+    'footer.copy': '© 2024 ZV Production Co. Records. 全著作権所有。',
+  },
+  ko: {
+    'hero.scroll': '스크롤',
+    'nav.studio': '스튜디오', 'nav.artists': '아티스트', 'nav.releases': '릴리스',
+    'nav.videos': '비디오', 'nav.contact': '문의',
+    'studio.label': '스튜디오', 'studio.heading': '음악이<br/>탄생하는 곳.',
+    'studio.body': '레코딩 부스, 아날로그 콘솔, 최첨단 장비를 갖춘 월드클래스 시설.',
+    'studio.a': '스튜디오 A', 'studio.b': '스튜디오 B', 'studio.mastering': '마스터링',
+    'artists.label': '로스터', 'artists.title': '우리의 <span class="text-cyan">아티스트</span>',
+    'artist.veloz.genre': '레게톤 · 어반', 'artist.veloz.bio': '경계를 허무는 일렉트로닉 비트로 레게톤의 미래를 이끈다.',
+    'artist.luna.genre': '트랩 · 얼터너티브', 'artist.luna.bio': '영혼이 담긴 트랩, 날것의 가사, 가슴을 울리는 비트.',
+    'artist.nova.genre': '라틴 팝 · R&B', 'artist.nova.bio': '머릿속에서 떠나지 않는 모던 라틴 팝의 목소리.',
+    'releases.label': '디스코그래피', 'releases.title': '최신 <span class="text-magenta">릴리스</span>',
+    'videos.label': '콘텐츠', 'videos.title': '주목할 <span class="text-cyan">비디오</span>',
+    'video.type.mv': '공식 MV',
+    'channels.label': '채널', 'channels.title': '글로벌 <span class="text-cyan">탤런트</span>',
+    'upcoming.label': '곧 출시', 'upcoming.title': '다가오는 <span class="text-cyan">릴리스</span>',
+    'upcoming.new': 'NEW',
+    'cd.days': '일', 'cd.hours': '시간', 'cd.mins': '분', 'cd.secs': '초',
+    'popup.badge': '🔥 신규 릴리스', 'popup.label': '지금 공개', 'popup.listen': '▶ 지금 듣기', 'popup.later': '나중에',
+    'footer.home': '홈',
+    'footer.sub': '프로덕션 · 레코드 · 설립 2024',
+    'footer.copy': '© 2024 ZV Production Co. Records. 모든 권리 보유.',
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  const dict = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) {
+      // Remove text-reveal-line class so initTextReveals can re-process
+      el.classList.remove('text-reveal-line');
+      el.innerHTML = dict[key];
+    }
+  });
+  // Re-initialize text reveal chars after language change
+  initTextReveals();
+  // Re-trigger GSAP animations for newly split chars
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    document.querySelectorAll('.text-reveal-line').forEach(el => {
+      const chars = el.querySelectorAll('.char');
+      if (chars.length) {
+        gsap.to(chars, {
+          y: 0, opacity: 1,
+          stagger: 0.02,
+          duration: 0.6,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%' }
+        });
+      }
+    });
+  }
+  // Update lang button label
+  document.getElementById('langLabel').textContent = lang.toUpperCase();
+  // Update active state in dropdown
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.lang === lang);
+  });
+  // Close dropdown
+  document.getElementById('langDropdown').classList.remove('open');
+  // Save preference
+  localStorage.setItem('zv-lang', lang);
+}
+
+function toggleLangMenu() {
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+
+// Close lang dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.lang-switcher')) {
+    document.getElementById('langDropdown').classList.remove('open');
+  }
+});
+
+// Mobile menu
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  const isOpen = menu.classList.toggle('open');
+  btn.textContent = isOpen ? '✕' : '☰';
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').textContent = '☰';
+  document.body.style.overflow = '';
+}
+
+// Load saved language — defer to ensure it runs after DOMContentLoaded + initTextReveals
+document.addEventListener('DOMContentLoaded', () => {
+  // Small delay so initTextReveals runs first, then setLang can re-process
+  requestAnimationFrame(() => {
+    const savedLang = localStorage.getItem('zv-lang');
+    if (savedLang && i18n[savedLang]) setLang(savedLang);
+  });
+});
+
+// ======= NEW RELEASE POPUP =======
+let nrTimeline = null;
+
+function showNewRelease() {
+  const backdrop = document.getElementById('nrBackdrop');
+  const popup = document.getElementById('nrPopup');
+  const disc = document.getElementById('nrDisc');
+
+  backdrop.classList.add('active');
+
+  nrTimeline = gsap.timeline();
+
+  // Backdrop fade in
+  nrTimeline.to(backdrop, { background: 'rgba(0,0,0,0.85)', duration: 0.4 });
+
+  // Popup scales in with bounce
+  nrTimeline.to(popup, {
+    opacity: 1, scale: 1, y: 0,
+    duration: 0.6, ease: 'back.out(1.4)'
+  }, '-=0.2');
+
+  // Disc slides out from behind the sleeve
+  nrTimeline.fromTo(disc,
+    { right: '-30%', rotation: 0 },
+    { right: '-15%', rotation: 20, duration: 0.8, ease: 'power3.out' },
+    '-=0.3'
+  );
+
+  // Disc starts spinning
+  nrTimeline.add(() => disc.classList.add('spinning'), '+=0.1');
+
+  // Badge pulse
+  nrTimeline.from('.nr-new-badge', {
+    scale: 0, duration: 0.4, ease: 'back.out(2)'
+  }, '-=0.6');
+
+  // Body content staggers in
+  nrTimeline.from('.nr-body > *', {
+    opacity: 0, y: 15, stagger: 0.08, duration: 0.5, ease: 'power3.out'
+  }, '-=0.3');
+}
+
+function closeNewRelease() {
+  const backdrop = document.getElementById('nrBackdrop');
+  const popup = document.getElementById('nrPopup');
+  const disc = document.getElementById('nrDisc');
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      backdrop.classList.remove('active');
+      disc.classList.remove('spinning');
+      // Reset for next open
+      gsap.set(popup, { opacity: 0, scale: 0.8, y: 40 });
+      gsap.set(disc, { right: '-30%', rotation: 0 });
+    }
+  });
+
+  tl.to(disc, { right: '-30%', rotation: -10, duration: 0.4, ease: 'power2.in' });
+  tl.to(popup, { opacity: 0, scale: 0.9, y: 20, duration: 0.3, ease: 'power2.in' }, '-=0.2');
+  tl.to(backdrop, { background: 'rgba(0,0,0,0)', duration: 0.3 }, '-=0.2');
+}
+
+// Popup now controlled by API data via renderPopup() — no hardcoded timer
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const backdrop = document.getElementById('nrBackdrop');
+    if (backdrop.classList.contains('active')) closeNewRelease();
+  }
+});
+
+// ======= COUNTDOWN TIMERS =======
+function updateCountdowns() {
+  document.querySelectorAll('.countdown').forEach(cd => {
+    const target = new Date(cd.dataset.date).getTime();
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    cd.querySelector('.cd-days').textContent = String(days).padStart(2, '0');
+    cd.querySelector('.cd-hours').textContent = String(hours).padStart(2, '0');
+    cd.querySelector('.cd-mins').textContent = String(mins).padStart(2, '0');
+    cd.querySelector('.cd-secs').textContent = String(secs).padStart(2, '0');
+  });
+}
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
+</script>
+
+</body>
+</html>

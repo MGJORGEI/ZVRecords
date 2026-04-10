@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApiToken {
+  id        String   @id @default(uuid())
+  name      String
+  token     String   @unique
+  createdBy String
+  active    Boolean  @default(true)
+  lastUsed  DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Artist {
+  id         String    @id @default(uuid())
+  name       String
+  slug       String    @unique
+  genre      String
+  bio        String    @default("")
+  bioEn      String    @default("")
+  bioEs      String    @default("")
+  bioJa      String    @default("")
+  bioKo      String    @default("")
+  image      String    @default("")
+  flag       String    @default("🇲🇽")
+  market     String    @default("LATIN")
+  spotify    String    @default("")
+  youtube    String    @default("")
+  tiktok     String    @default("")
+  instagram  String    @default("")
+  appleMusic String    @default("")
+  featured   Boolean   @default(false)
+  order      Int       @default(0)
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  releases   Release[]
+  videos     Video[]
+  linkPage   LinkPage?
+}
+
+model Release {
+  id          String   @id @default(uuid())
+  title       String
+  type        String   @default("single")
+  cover       String   @default("")
+  date        String
+  spotify     String   @default("")
+  appleMusic  String   @default("")
+  youtubeMusic String  @default("")
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Upcoming {
+  id         String   @id @default(uuid())
+  title      String
+  artistName String
+  cover      String   @default("")
+  date       String
+  active     Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Video {
+  id         String   @id @default(uuid())
+  title      String
+  youtubeId  String
+  type       String   @default("mv")
+  order      Int      @default(0)
+  active     Boolean  @default(true)
+  artistId   String
+  artist     Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model PopupConfig {
+  id          String  @id @default("singleton")
+  enabled     Boolean @default(true)
+  title       String  @default("MIDNIGHT")
+  artistName  String  @default("LUNA ROJA × VELOZ")
+  cover       String  @default("")
+  label       String  @default("OUT NOW")
+  listenUrl   String  @default("#")
+  badgeText   String  @default("🔥 NEW RELEASE")
+}
+
+model LinkPage {
+  id          String     @id @default(uuid())
+  slug        String     @unique
+  title       String
+  bio         String     @default("")
+  avatar      String     @default("")
+  theme       String     @default("dark")
+  bgColor     String     @default("#0D0D0D")
+  accentColor String     @default("#00E5FF")
+  textColor   String     @default("#F0F0F0")
+  active      Boolean    @default(true)
+  artistId    String?    @unique
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  links       LinkItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model LinkItem {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  icon       String   @default("")
+  color      String   @default("")
+  textColor  String   @default("")
+  style      String   @default("")
+  order      Int      @default(0)
+  active     Boolean  @default(true)
+  linkPageId String
+  linkPage   LinkPage @relation(fields: [linkPageId], references: [id], onDelete: Cascade)
+}
