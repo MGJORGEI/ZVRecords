@@ -127,8 +127,7 @@ npx tsx prisma/seed.ts   # Optional: seed sample artists
 cd ..
 
 # 4. Start the server
-cd server
-npx tsx src/index.ts
+npm run dev
 ```
 
 Then open:
