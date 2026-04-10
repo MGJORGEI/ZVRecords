@@ -809,78 +809,189 @@
       letter-spacing: 0.2em; color: var(--zv-muted); margin-top: 0.2rem; display: block;
     }
 
-    /* ===== VIDEOS ===== */
+    /* ===== VIDEOS — CRT TV FRAME ===== */
     .s-videos { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; overflow: hidden; }
     .videos-list {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
+      gap: 2rem;
     }
+
+    /* — CRT outer shell — */
     .video-card {
-      position: relative; overflow: hidden; cursor: pointer;
-      border-radius: 16px;
-      border: 1px solid var(--zv-border);
-      background: var(--zv-card);
-      transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+      position: relative; cursor: pointer;
+      background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 40%, #111 100%);
+      border-radius: 18px;
+      padding: 18px 18px 0 18px;
+      border: none;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 -1px 0 rgba(0,0,0,0.4);
+      transition: transform 0.4s, box-shadow 0.4s;
     }
     .video-card:hover {
-      border-color: var(--zv-cyan);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,229,255,0.08);
-      transform: translateY(-4px);
+      transform: translateY(-6px);
+      box-shadow:
+        0 16px 48px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 0 30px rgba(0,229,255,0.06);
+    }
+
+    /* — Ventilation slots on top — */
+    .crt-vents {
+      display: flex; justify-content: center; gap: 3px;
+      margin-bottom: 10px;
+    }
+    .crt-vent {
+      width: 20px; height: 2px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 1px;
+    }
+
+    /* — Screen bezel — curved inset — */
+    .crt-screen {
+      position: relative; overflow: hidden;
+      border-radius: 12px 12px 12px 12px;
+      border: 3px solid #0a0a0a;
+      box-shadow:
+        inset 0 0 20px rgba(0,0,0,0.9),
+        inset 0 0 4px rgba(0,229,255,0.05),
+        0 0 0 1px rgba(255,255,255,0.03);
+      aspect-ratio: 4/3;
+      background: #000;
+    }
+
+    /* — CRT scanlines overlay — */
+    .crt-screen::before {
+      content: ''; position: absolute; inset: 0; z-index: 4;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 4px
+      );
+    }
+    /* — CRT screen curvature/vignette — */
+    .crt-screen::after {
+      content: ''; position: absolute; inset: 0; z-index: 5;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+      border-radius: inherit;
+    }
+    /* — Screen reflection glare — */
+    .crt-glare {
+      position: absolute; top: -20%; left: -20%;
+      width: 70%; height: 70%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%);
+      transform: rotate(-30deg);
+      z-index: 6; pointer-events: none;
     }
 
     .video-thumb {
-      position: relative; overflow: hidden; background: var(--zv-dark);
-      aspect-ratio: 16/9;
+      position: relative; overflow: hidden; background: #000;
+      width: 100%; height: 100%;
     }
     .video-thumb img {
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s;
       display: block;
-      filter: brightness(0.7) saturate(0.8);
+      filter: brightness(0.75) saturate(0.9) contrast(1.1);
     }
     .video-card:hover .video-thumb img {
-      transform: scale(1.08);
-      filter: brightness(0.85) saturate(1.1);
+      transform: scale(1.05);
+      filter: brightness(0.9) saturate(1.2) contrast(1.1);
     }
+
+    /* — Power LED — */
+    .crt-led {
+      position: absolute; bottom: 8px; right: 12px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #333;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+      z-index: 2;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .video-card:hover .crt-led {
+      background: #1DB954;
+      box-shadow: 0 0 6px #1DB954, 0 0 12px rgba(29,185,84,0.4);
+    }
+
+    /* — Play button on screen — */
     .video-play {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
       opacity: 0; transition: opacity 0.4s; color: var(--zv-white);
+      z-index: 7;
     }
     .video-play svg {
-      width: 56px; height: 56px;
-      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+      width: 48px; height: 48px;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.7));
       transition: transform 0.3s;
     }
     .video-card:hover .video-play { opacity: 1; }
     .video-card:hover .video-play svg { transform: scale(1.15); }
+
+    /* — Info below screen (on the TV body) — */
     .video-info {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 1.5rem 1.75rem;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+      position: relative;
+      padding: 0.8rem 0.25rem 0.9rem;
       z-index: 2;
     }
     .video-label {
-      font-family: var(--font-mono); font-size: 0.55rem;
-      letter-spacing: 0.3em; color: var(--zv-cyan); display: block; margin-bottom: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.5rem;
+      letter-spacing: 0.3em; color: var(--zv-cyan); display: block; margin-bottom: 0.25rem;
     }
     .video-title {
-      font-family: var(--font-display); font-size: 1.6rem;
-      letter-spacing: 0.02em; margin-bottom: 0.3rem;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      font-family: var(--font-display); font-size: 1.1rem;
+      letter-spacing: 0.02em; margin-bottom: 0.15rem;
+      color: var(--zv-white);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .video-meta { font-size: 0.8rem; color: var(--zv-muted); }
-    /* Glow line bottom on hover */
-    .video-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      z-index: 3;
+    .video-meta { font-size: 0.7rem; color: var(--zv-muted); }
+
+    /* — CRT bottom panel: brand + knobs — */
+    .crt-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 0.25rem 0.75rem;
     }
-    .video-card:hover::after { transform: scaleX(1); }
+    .crt-brand {
+      font-family: var(--font-mono); font-size: 0.45rem;
+      letter-spacing: 0.25em; color: rgba(255,255,255,0.12);
+      text-transform: uppercase;
+    }
+    .crt-knobs { display: flex; gap: 8px; }
+    .crt-knob {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.03);
+      position: relative;
+    }
+    .crt-knob::after {
+      content: ''; position: absolute;
+      top: 3px; left: 50%; width: 1px; height: 5px;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-50%);
+    }
+
+    /* — Static flicker on hover — */
+    @keyframes crtFlicker {
+      0%, 100% { opacity: 0; }
+      5% { opacity: 0.04; }
+      10% { opacity: 0; }
+    }
+    .crt-static {
+      position: absolute; inset: 0; z-index: 8;
+      pointer-events: none; opacity: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    .video-card:hover .crt-static {
+      animation: crtFlicker 0.15s steps(2) infinite;
+    }
 
     /* Video Modal */
     .video-modal {
@@ -1639,10 +1750,11 @@
 
       /* VIDEOS */
       .s-videos { padding: 4rem 1rem; }
-      .videos-list { grid-template-columns: 1fr; gap: 0.75rem; }
-      .video-card { border-radius: 10px; }
-      .video-thumb { aspect-ratio: 16/9; }
-      .video-info { padding: 1rem 1.25rem; }
+      .videos-list { grid-template-columns: 1fr; gap: 1.25rem; }
+      .video-card { border-radius: 14px; padding: 12px 12px 0 12px; }
+      .crt-screen { aspect-ratio: 4/3; }
+      .video-info { padding: 0.6rem 0.25rem 0.6rem; }
+      .video-title { font-size: 1rem; }
       .video-title { font-size: 1.15rem; }
       .video-label { font-size: 0.5rem; margin-bottom: 0.3rem; }
       .video-meta { font-size: 0.75rem; }
@@ -1709,9 +1821,11 @@
       .platform-btn { text-align: center; justify-content: center; }
       .releases-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
 
-      .video-title { font-size: 1rem; }
-      .video-info { padding: 0.75rem; }
+      .video-title { font-size: 0.9rem; }
+      .video-info { padding: 0.5rem 0.2rem; }
       .videos-list { padding: 0 0.75rem; }
+      .video-card { padding: 10px 10px 0 10px; border-radius: 12px; }
+      .crt-knob { width: 12px; height: 12px; }
       .release-featured { margin: 0 0.75rem 1.5rem; }
       .releases-grid { margin: 0 0.75rem 2rem; }
 
@@ -2089,29 +2203,49 @@
   </div>
   <div class="videos-list">
     <article class="video-card" onclick="openVideo('dQw4w9WgXcQ')">
-      <div class="video-thumb">
-        <img src="public/assets/frames/vid1_hd_04.jpg" alt="Velocidad Máxima" loading="lazy" />
-        <div class="video-play">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+      <div class="crt-vents"><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span></div>
+      <div class="crt-screen">
+        <div class="video-thumb">
+          <img src="public/assets/frames/vid1_hd_04.jpg" alt="Velocidad Máxima" loading="lazy" />
+          <div class="video-play">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="crt-static"></div>
         </div>
+        <div class="crt-glare"></div>
+        <div class="crt-led"></div>
       </div>
       <div class="video-info">
         <span class="video-label" data-i18n="video.type.mv">OFFICIAL MV</span>
         <h3 class="video-title">VELOCIDAD MÁXIMA</h3>
         <span class="video-meta">VELOZ · 2026</span>
       </div>
+      <div class="crt-bottom">
+        <span class="crt-brand">ZV Records</span>
+        <div class="crt-knobs"><div class="crt-knob"></div><div class="crt-knob"></div></div>
+      </div>
     </article>
     <article class="video-card" onclick="openVideo('dQw4w9WgXcQ')">
-      <div class="video-thumb">
-        <img src="public/assets/frames/vid2_hd_04.jpg" alt="Eclipse" loading="lazy" />
-        <div class="video-play">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+      <div class="crt-vents"><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span><span class="crt-vent"></span></div>
+      <div class="crt-screen">
+        <div class="video-thumb">
+          <img src="public/assets/frames/vid2_hd_04.jpg" alt="Eclipse" loading="lazy" />
+          <div class="video-play">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="crt-static"></div>
         </div>
+        <div class="crt-glare"></div>
+        <div class="crt-led"></div>
       </div>
       <div class="video-info">
         <span class="video-label" data-i18n="video.type.mv">OFFICIAL MV</span>
         <h3 class="video-title">ECLIPSE</h3>
         <span class="video-meta">LUNA ROJA · 2026</span>
+      </div>
+      <div class="crt-bottom">
+        <span class="crt-brand">ZV Records</span>
+        <div class="crt-knobs"><div class="crt-knob"></div><div class="crt-knob"></div></div>
       </div>
     </article>
   </div>
@@ -2716,16 +2850,26 @@ function renderVideos(videos) {
   if (!list || !active.length) return;
   list.innerHTML = active.map(v => `
     <article class="video-card" onclick="openVideo('${v.youtubeId}')">
-      <div class="video-thumb">
-        <img src="https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg" alt="${v.title}" loading="lazy" />
-        <div class="video-play">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+      <div class="crt-vents">${'<span class="crt-vent"></span>'.repeat(8)}</div>
+      <div class="crt-screen">
+        <div class="video-thumb">
+          <img src="https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg" alt="${v.title}" loading="lazy" />
+          <div class="video-play">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="crt-static"></div>
         </div>
+        <div class="crt-glare"></div>
+        <div class="crt-led"></div>
       </div>
       <div class="video-info">
         <span class="video-label">${(v.type || 'mv').toUpperCase()}</span>
         <h3 class="video-title">${v.title}</h3>
         <span class="video-meta">${v.artist?.name || ''} · ${new Date(v.createdAt).getFullYear()}</span>
+      </div>
+      <div class="crt-bottom">
+        <span class="crt-brand">ZV Records</span>
+        <div class="crt-knobs"><div class="crt-knob"></div><div class="crt-knob"></div></div>
       </div>
     </article>
   `).join('');
