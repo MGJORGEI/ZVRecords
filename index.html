@@ -334,254 +334,378 @@
     .text-cyan { color: var(--zv-cyan); }
     .text-magenta { color: var(--zv-magenta); }
 
-    /* ===== ARTISTAS ===== */
-    .s-artistas { padding: 6rem 0; }
+    /* ===== ARTISTAS — EXPANDABLE CARDS ===== */
+    .s-artistas { padding: 4rem 0 0; background: transparent; }
     .s-artistas .section-header { padding: 0 2rem; margin-bottom: 3rem; }
 
-    /* Featured artist — hero-style full width */
-    .artist-featured {
-      position: relative; width: 100%; height: 70vh; min-height: 480px;
-      overflow: hidden; cursor: pointer;
+    .expandable-cards {
+      display: flex; width: 100%; height: 75vh; min-height: 520px;
+      gap: 0; overflow: hidden;
     }
-    .artist-featured img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: brightness(0.5); transition: filter 0.6s, transform 0.6s;
+    .exp-card {
+      flex: 1; position: relative; overflow: hidden; cursor: pointer;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      transition: flex 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
     }
-    .artist-featured:hover img { filter: brightness(0.65); transform: scale(1.03); }
-    .artist-featured-content {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 3rem 4rem; z-index: 2;
+    .exp-card:last-child { border-right: none; }
+    .exp-card.active { flex: 3; }
+
+    /* Image */
+    .exp-card-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.35) grayscale(0.4);
+      transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .artist-featured-tag {
+    .exp-card.active .exp-card-img {
+      filter: brightness(0.55) grayscale(0);
+      transform: scale(1.05);
+    }
+
+    /* Gradient overlay */
+    .exp-card::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.4) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Number watermark */
+    .exp-card-num {
+      position: absolute; top: 1.5rem; left: 1.5rem; z-index: 2;
+      font-family: var(--font-display); font-size: clamp(3rem, 8vw, 6rem);
+      color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none;
+      transition: color 0.5s;
+    }
+    .exp-card.active .exp-card-num { color: rgba(255,255,255,0.07); }
+
+    /* Collapsed state — vertical label */
+    .exp-card-label {
+      position: absolute; bottom: 2.5rem; left: 50%; z-index: 3;
+      transform: translateX(-50%) rotate(-90deg);
+      transform-origin: center center;
+      white-space: nowrap;
+      font-family: var(--font-display); font-size: 1.4rem;
+      letter-spacing: 0.15em; color: var(--zv-white);
+      opacity: 1; transition: opacity 0.3s 0.1s;
+      pointer-events: none;
+    }
+    .exp-card.active .exp-card-label { opacity: 0; transition: opacity 0.2s; }
+
+    /* Content — visible only when active */
+    .exp-card-content {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      padding: 2.5rem 3rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.4s 0.15s, transform 0.4s 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .exp-card.active .exp-card-content {
+      opacity: 1; transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .exp-card-genre {
       font-family: var(--font-mono); font-size: 0.6rem;
-      letter-spacing: 0.35em; color: var(--zv-cyan); margin-bottom: 0.75rem; display: block;
+      letter-spacing: 0.35em; color: var(--zv-cyan);
+      margin-bottom: 0.75rem; display: block;
     }
-    .artist-featured-name {
+    .exp-card-name {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 7rem); line-height: 0.9;
+      font-size: clamp(2.5rem, 5vw, 5rem); line-height: 0.9;
       letter-spacing: -0.01em; margin-bottom: 0.75rem;
     }
-    .artist-featured-bio {
-      font-size: 1rem; color: var(--zv-muted); max-width: 500px; line-height: 1.7;
+    .exp-card-bio {
+      font-size: 0.9rem; color: var(--zv-muted); max-width: 420px;
+      line-height: 1.7; margin-bottom: 1.25rem;
     }
-    .artist-featured-links {
-      display: flex; gap: 0.75rem; margin-top: 1.5rem;
+    .exp-card-links {
+      display: flex; gap: 0.75rem;
     }
-    .artist-featured-links a {
-      width: 48px; height: 48px; border-radius: 50%;
+    .exp-card-links a {
+      width: 44px; height: 44px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       border: 1px solid rgba(255,255,255,0.15); color: var(--zv-white);
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); font-size: 0.85rem;
       backdrop-filter: blur(12px); background: rgba(255,255,255,0.06);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-    .artist-featured-links a svg {
-      width: 24px; height: 24px;
-      transition: transform 0.3s, filter 0.3s;
-    }
-    .artist-featured-links a:hover {
+    .exp-card-links a:hover {
       transform: scale(1.15) translateY(-4px);
       border-color: var(--zv-cyan);
-      background: rgba(0,229,255,0.1);
-      box-shadow: 0 8px 30px rgba(0,229,255,0.2);
-    }
-    .artist-featured-links a:hover svg {
-      transform: scale(1.1);
-      filter: brightness(1.3);
-    }
-    .artist-featured-number {
-      position: absolute; top: 2rem; right: 3rem;
-      font-family: var(--font-display); font-size: clamp(5rem, 15vw, 12rem);
-      color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none;
+      background: rgba(0,229,255,0.12);
+      box-shadow: 0 6px 24px rgba(0,229,255,0.2);
     }
 
-    /* Artist row — horizontal cards */
-    .artists-row {
-      display: flex; gap: 0; width: 100%; overflow: hidden;
+    /* Accent bar on active card */
+    .exp-card-accent {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px; z-index: 4;
+      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
     }
-    .artist-row-card {
-      flex: 1; position: relative; min-height: 400px;
-      overflow: hidden; cursor: pointer;
-      border-right: 1px solid var(--zv-border);
-      transition: flex 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    .artist-row-card:last-child { border-right: none; }
-    .artist-row-card:hover { flex: 1.8; }
-    .artist-row-card img {
-      width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;
-      filter: brightness(0.45) grayscale(0.3);
-      transition: filter 0.5s, transform 0.5s;
-    }
-    .artist-row-card:hover img { filter: brightness(0.6) grayscale(0); transform: scale(1.05); }
-    .artist-row-content {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 2rem; z-index: 2;
-    }
-    .artist-row-genre {
-      font-family: var(--font-mono); font-size: 0.55rem;
-      letter-spacing: 0.3em; color: var(--zv-magenta); display: block; margin-bottom: 0.4rem;
-    }
-    .artist-row-name {
-      font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.2rem);
-      letter-spacing: 0.02em; margin-bottom: 0.4rem;
-    }
-    .artist-row-bio {
-      font-size: 0.8rem; color: var(--zv-muted); line-height: 1.5;
-      opacity: 0; max-height: 0; overflow: hidden;
-      transition: opacity 0.4s, max-height 0.4s;
-    }
-    .artist-row-card:hover .artist-row-bio { opacity: 1; max-height: 80px; }
-    .artist-row-num {
-      position: absolute; top: 1.5rem; left: 1.5rem;
-      font-family: var(--font-display); font-size: 3rem;
-      color: rgba(255,255,255,0.06); line-height: 1;
-    }
+    .exp-card.active .exp-card-accent { transform: scaleX(1); }
 
     /* ===== LANZAMIENTOS ===== */
-    .s-lanzamientos { padding: 6rem 2rem 4rem; background: var(--zv-dark); }
+    .s-lanzamientos { padding: 4rem 2rem 4rem; background: transparent; }
     .s-lanzamientos > * { max-width: 1400px; margin-left: auto; margin-right: auto; }
 
     /* Featured release — full-width hero overlay card */
+    /* ===== WALKMAN CASSETTE PLAYER ===== */
     .release-featured {
       position: relative;
-      max-width: 1200px;
-      margin: 0 auto 3rem;
-      border-radius: 20px; overflow: hidden;
-      border: 1px solid var(--zv-border);
-      min-height: 420px;
-      cursor: pointer;
-      transition: border-color 0.4s, box-shadow 0.4s;
-      /* Horizontal padding handled by parent wrapper */
-    }
-    .release-featured:hover {
-      border-color: rgba(255,0,180,0.3);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 40px rgba(255,0,180,0.06);
-    }
-    .release-featured-bg {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover;
-      filter: brightness(0.35) saturate(0.8);
-      transition: filter 0.6s, transform 0.8s;
-    }
-    .release-featured:hover .release-featured-bg {
-      filter: brightness(0.45) saturate(1);
-      transform: scale(1.05);
-    }
-    .release-featured-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg,
-        rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%,
-        rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%);
-      z-index: 1;
-    }
-    .release-featured-content {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 3rem 2rem;
-      min-height: 420px;
-      gap: 1.5rem;
-    }
-    /* Cover art — vinyl style with shadow */
-    .release-featured-cover {
-      width: 220px; height: 220px;
-      border-radius: 14px; overflow: hidden;
+      max-width: 660px; margin: 0 auto 3rem;
+      background: linear-gradient(170deg, #2a2a2a 0%, #1a1a1a 30%, #111 60%, #0d0d0d 100%);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.07);
       box-shadow:
-        0 20px 60px rgba(0,0,0,0.6),
-        0 0 0 1px rgba(255,255,255,0.08),
-        0 0 40px rgba(255,0,180,0.08);
-      flex-shrink: 0;
-      position: relative;
-      transition: transform 0.5s;
+        0 40px 100px rgba(0,0,0,0.7),
+        0 2px 0 rgba(255,255,255,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -2px 0 rgba(0,0,0,0.5);
+      padding: 1.8rem 2.2rem 1.6rem;
+      overflow: hidden;
     }
-    .release-featured:hover .release-featured-cover { transform: translateY(-6px) scale(1.03); }
-    .release-featured-cover img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
+    /* Subtle brushed metal texture */
+    .release-featured::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        90deg, transparent, transparent 2px,
+        rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px
+      );
+      pointer-events: none; border-radius: 28px;
     }
-    /* Now playing indicator */
-    .release-featured-playing {
-      position: absolute; bottom: 0.75rem; left: 0.75rem;
-      display: flex; align-items: flex-end; gap: 3px;
-      padding: 0.3rem 0.6rem; border-radius: 4px;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    /* Corner screws */
+    .wk-screw {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #444, #1a1a1a);
+      border: 1px solid rgba(255,255,255,0.06);
+      z-index: 2;
     }
-    .eq-bar {
-      width: 3px; border-radius: 2px;
-      background: var(--zv-magenta);
-      animation: eqBounce 0.8s ease-in-out infinite alternate;
+    .wk-screw::after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 5px; height: 1px; background: rgba(0,0,0,0.5);
     }
-    .eq-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
-    .eq-bar:nth-child(2) { height: 14px; animation-delay: 0.15s; }
-    .eq-bar:nth-child(3) { height: 10px; animation-delay: 0.3s; }
-    .eq-bar:nth-child(4) { height: 16px; animation-delay: 0.1s; }
-    .eq-bar:nth-child(5) { height: 6px; animation-delay: 0.25s; }
-    @keyframes eqBounce {
-      0% { height: 4px; }
-      100% { height: 18px; }
-    }
+    .wk-screw.tl { top: 12px; left: 14px; }
+    .wk-screw.tr { top: 12px; right: 14px; }
+    .wk-screw.bl { bottom: 12px; left: 14px; }
+    .wk-screw.br { bottom: 12px; right: 14px; }
 
-    .release-featured-info {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+    /* Top label */
+    .wk-brand {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.2rem; position: relative; z-index: 1;
     }
-    .release-featured-badge {
-      font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.3em;
+    .wk-brand-name {
+      font-family: var(--font-display); font-size: 1.3rem;
+      letter-spacing: 0.25em; color: var(--zv-cyan);
+      text-shadow: 0 0 20px rgba(0,229,255,0.15);
+    }
+    .wk-brand-badge {
+      font-family: var(--font-mono); font-size: 0.45rem; letter-spacing: 0.25em;
       color: var(--zv-black); background: var(--zv-magenta);
-      padding: 0.3rem 0.8rem; border-radius: 3px; display: inline-block;
-      width: fit-content; margin-bottom: 1.25rem; font-weight: 700;
-      box-shadow: 0 0 20px rgba(255,0,180,0.3);
+      padding: 0.2rem 0.6rem; border-radius: 2px; font-weight: 700;
     }
-    .release-featured-title {
-      font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem);
-      letter-spacing: 0.02em; margin-bottom: 0.5rem; line-height: 0.95;
-      text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    .wk-brand-model {
+      font-family: var(--font-mono); font-size: 0.4rem;
+      color: rgba(255,255,255,0.2); letter-spacing: 0.15em;
     }
-    .release-featured-artist {
-      font-size: 1.05rem; color: rgba(255,255,255,0.6);
-      margin-bottom: 0.15rem; font-weight: 600;
-    }
-    .release-featured-date {
-      font-family: var(--font-mono); font-size: 0.65rem;
-      color: var(--zv-cyan); letter-spacing: 0.15em; margin-bottom: 1.5rem;
-      opacity: 0.8;
-    }
-    .release-featured-platforms { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
-    .platform-btn {
-      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
-      padding: 0.6rem 1.3rem; border-radius: 100px;
-      border: 1px solid rgba(255,255,255,0.12); color: var(--zv-white);
-      transition: all 0.25s; cursor: pointer; text-decoration: none;
-      backdrop-filter: blur(10px); background: rgba(255,255,255,0.05);
-      display: inline-flex; align-items: center; gap: 0.5rem;
-    }
-    .platform-btn:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.25);
-      transform: translateY(-2px);
-    }
-    .platform-btn.primary {
-      background: var(--zv-cyan); color: var(--zv-black);
-      border-color: var(--zv-cyan); font-weight: 700;
-      box-shadow: 0 0 20px rgba(0,229,255,0.2);
-    }
-    .platform-btn.primary:hover {
-      background: var(--zv-magenta); border-color: var(--zv-magenta); color: #fff;
-      box-shadow: 0 0 20px rgba(255,0,180,0.3);
-      transform: translateY(-2px);
-    }
-    .platform-btn svg { width: 14px; height: 14px; vertical-align: middle; }
-    .platform-btn.primary svg { fill: var(--zv-black); }
-    .platform-btn.primary:hover svg { fill: #fff; }
 
-    /* Number watermark on featured */
-    .release-featured-number {
+    /* Cassette window */
+    .wk-cassette {
+      position: relative; z-index: 1;
+      background: linear-gradient(180deg, #080808 0%, #0e0e0e 50%, #0a0a0a 100%);
+      border-radius: 14px; padding: 1.6rem 1.8rem 1.2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 1.2rem;
+      box-shadow:
+        inset 0 2px 10px rgba(0,0,0,0.5),
+        inset 0 -1px 0 rgba(255,255,255,0.03);
+    }
+    /* Inner bezel */
+    .wk-cassette::after {
+      content: ''; position: absolute; inset: 3px;
+      border: 1px solid rgba(255,255,255,0.025);
+      border-radius: 12px; pointer-events: none;
+    }
+    /* Reels + cover */
+    .wk-reels {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; margin-bottom: 1.2rem; position: relative;
+    }
+    .wk-reel {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.06);
+      position: relative; flex-shrink: 0;
+      background: radial-gradient(circle at 40% 40%, #1c1c1c 0%, #0a0a0a 60%, #050505 100%);
+      animation: reelSpin 2.5s linear infinite;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    }
+    .wk-reel::before {
+      content: ''; position: absolute; inset: 12px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.04);
+      background: repeating-conic-gradient(
+        rgba(255,255,255,0.02) 0deg 30deg, transparent 30deg 60deg
+      );
+    }
+    .wk-reel::after {
+      content: ''; position: absolute;
+      top: 50%; left: 50%; width: 16px; height: 16px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #333, #111);
+      border: 1.5px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    @keyframes reelSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    /* Tape path */
+    .wk-tape-band {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--font-display); font-size: 18rem;
-      color: rgba(255,255,255,0.02); line-height: 1;
-      z-index: 0; pointer-events: none;
+      width: 55%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,90,43,0.15), rgba(139,90,43,0.25), rgba(139,90,43,0.15), transparent);
     }
+    /* Cover art */
+    .wk-cover {
+      width: 90px; height: 90px; border-radius: 8px;
+      overflow: hidden; flex-shrink: 0; position: relative; z-index: 1;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+    }
+    .wk-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Cassette label */
+    .wk-label { text-align: center; }
+    .wk-label-title {
+      font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.06em; line-height: 1;
+    }
+    .wk-label-artist {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      color: var(--zv-muted); letter-spacing: 0.2em; margin-top: 0.3rem;
+    }
+    .wk-label-lines {
+      display: flex; flex-direction: column; margin-top: 0.5rem; gap: 3px;
+    }
+    .wk-label-lines span {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.035) 20%, rgba(255,255,255,0.035) 80%, transparent 95%);
+    }
+
+    /* Date */
+    .wk-info { text-align: center; margin-bottom: 1rem; position: relative; z-index: 1; }
+    .wk-info-date {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      color: var(--zv-cyan); letter-spacing: 0.2em; opacity: 0.7;
+    }
+
+    /* ── Transport controls ── */
+    .wk-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; position: relative; z-index: 1;
+      background: linear-gradient(180deg, #161616, #0e0e0e);
+      border-radius: 10px; padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .wk-btn {
+      width: 44px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(180deg, #2a2a2a 0%, #1e1e1e 100%);
+      border: none; border-radius: 4px; cursor: pointer;
+      color: var(--zv-white); text-decoration: none;
+      transition: all 0.15s;
+      box-shadow:
+        0 3px 0 #0a0a0a,
+        0 4px 8px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .wk-btn:hover {
+      background: linear-gradient(180deg, #333 0%, #262626 100%);
+      transform: translateY(-1px);
+      box-shadow:
+        0 4px 0 #0a0a0a,
+        0 6px 12px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .wk-btn:active {
+      transform: translateY(2px);
+      box-shadow:
+        0 1px 0 #0a0a0a,
+        0 1px 3px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .wk-btn svg { width: 12px; height: 12px; fill: rgba(255,255,255,0.5); }
+    .wk-btn:hover svg { fill: rgba(255,255,255,0.8); }
+
+    /* Play button — bigger, accent */
+    .wk-btn-play {
+      width: 54px; height: 38px; border-radius: 5px;
+      background: linear-gradient(180deg, #333 0%, #222 100%);
+      box-shadow:
+        0 3px 0 #0a0a0a,
+        0 4px 8px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .wk-btn-play svg { width: 14px; height: 14px; fill: var(--zv-cyan); }
+    .wk-btn-play:hover svg { fill: #fff; }
+    .wk-btn-play:hover {
+      box-shadow:
+        0 4px 0 #0a0a0a,
+        0 6px 16px rgba(0,0,0,0.5),
+        0 0 15px rgba(0,229,255,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    /* Stop button */
+    .wk-btn-stop { width: 38px; }
+
+    /* Divider between button groups */
+    .wk-btn-divider {
+      width: 1px; height: 20px; background: rgba(255,255,255,0.04);
+      margin: 0 4px;
+    }
+
+    /* Spotify link — small subtle badge */
+    .wk-spotify-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.8rem; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .wk-spotify-link a {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-family: var(--font-mono); font-size: 0.45rem;
+      letter-spacing: 0.15em; color: rgba(255,255,255,0.25);
+      text-decoration: none; transition: color 0.3s;
+    }
+    .wk-spotify-link a:hover { color: #1DB954; }
+    .wk-spotify-link a svg { width: 12px; height: 12px; fill: currentColor; }
+
+    /* Volume slider */
+    .wk-volume {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 0.5rem; margin-top: 0.6rem; position: relative; z-index: 1;
+    }
+    .wk-volume-label {
+      font-family: var(--font-mono); font-size: 0.4rem;
+      letter-spacing: 0.2em; color: rgba(255,255,255,0.15);
+    }
+    .wk-volume-bar {
+      width: 80px; height: 3px; border-radius: 2px;
+      background: rgba(255,255,255,0.04); position: relative;
+    }
+    .wk-volume-fill {
+      position: absolute; left: 0; top: 0;
+      width: 65%; height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      opacity: 0.5;
+    }
+
+    /* Hide old elements */
+    .release-featured-bg, .release-featured-overlay,
+    .release-featured-number { display: none; }
 
     /* Releases grid — visual cards with cover prominent */
     .releases-grid {
@@ -785,7 +909,7 @@
 
     /* ===== FOOTER ===== */
     .site-footer {
-      padding: 6rem 2rem 3rem; background: var(--zv-dark);
+      padding: 6rem 2rem 3rem; background: rgba(13,13,13,0.3);
       border-top: 1px solid var(--zv-border); text-align: center;
       position: relative; overflow: hidden;
     }
@@ -1130,11 +1254,28 @@
       transform: translateY(110%);
     }
 
-    /* ===== CHANNELS V2 — HORIZONTAL SCROLL CINEMATIC ===== */
+    /* ===== BACKGROUND — juanitodoble from Global Talent to footer ===== */
+    .bg-juanito-wrap {
+      position: relative;
+    }
+    .bg-juanito-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url('public/juanitodoble.png');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      opacity: 0.7;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-juanito-wrap > * { position: relative; z-index: 1; }
+
+    /* ===== CHANNELS / GLOBAL TALENT — EXPANDABLE CARDS ===== */
     .channels-section-v2 {
       position: relative; z-index: 2;
       padding: 5rem 0 4rem;
-      background: var(--zv-black);
+      background: transparent;
       overflow: hidden;
     }
     .channels-header-v2 {
@@ -1151,140 +1292,154 @@
       letter-spacing: 0.3em; color: var(--zv-cyan); margin-bottom: 0.75rem;
     }
 
-    .channels-scroll-wrapper {
-      position: relative; max-width: 100%; overflow: visible;
-    }
-    .channels-scroll {
-      display: flex; gap: 1.5rem;
-      overflow-x: auto; overflow-y: visible;
-      padding: 1rem 2rem 2rem;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .channels-scroll::-webkit-scrollbar { display: none; }
-
-    .channel-card-v2 {
-      flex: 0 0 300px; height: 460px;
-      scroll-snap-align: center;
-      position: relative; border-radius: 20px;
-      overflow: visible; cursor: pointer;
-      transition: transform 0.15s ease-out;
-    }
-    .channel-card-v2 .card-inner {
-      position: relative; width: 100%; height: 100%;
-      border-radius: 20px; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-      transition: border-color 0.4s, box-shadow 0.4s;
-    }
-    .channel-card-v2:hover .card-inner {
-      border-color: rgba(0,229,255,0.25);
-      box-shadow:
-        0 30px 80px rgba(0,0,0,0.6),
-        0 0 60px rgba(0,229,255,0.07),
-        inset 0 0 60px rgba(0,0,0,0.2);
-    }
-    .channel-card-v2 .card-bg {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover;
-      filter: brightness(0.4) saturate(0.7);
-      transition: filter 0.6s, transform 0.8s;
-    }
-    .channel-card-v2:hover .card-bg {
-      filter: brightness(0.55) saturate(1.1);
-      transform: scale(1.1);
+    /* Expandable cards container */
+    .channels-expand-row {
+      display: flex; width: 100%; height: 520px;
+      gap: 0; overflow: hidden; padding: 0 2rem;
+      border-radius: 24px;
     }
 
-    /* Glass panel at bottom — two zones: info + platforms */
-    .channel-card-v2 .card-glass {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 0;
-      background: linear-gradient(to top,
-        rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.88) 30%,
-        rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 75%, transparent 100%);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 2;
-      display: flex; flex-direction: column;
+    /* Individual expandable card */
+    .ch-exp-card {
+      flex: 1; position: relative; overflow: hidden; cursor: pointer;
+      border-radius: 20px; margin: 0 4px;
+      transition: flex 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
     }
-    /* Info zone — name, genre */
-    .channel-card-v2 .card-info-zone {
-      padding: 2rem 1.4rem 0.8rem;
+    .ch-exp-card.ch-active { flex: 3.5; }
+
+    /* Card image */
+    .ch-exp-card .card-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.3) grayscale(0.5) saturate(0.6);
+      transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* Platform zone — separated, always visible */
-    .channel-card-v2 .card-platform-zone {
-      padding: 0 1.4rem 1.2rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      margin-top: auto;
+    .ch-exp-card.ch-active .card-bg {
+      filter: brightness(0.5) grayscale(0) saturate(1.1);
+      transform: scale(1.08);
     }
 
-    .channel-card-v2 .card-market {
-      position: absolute; top: 1rem; left: 1rem;
+    /* Gradient overlay */
+    .ch-exp-card::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.5) 35%, transparent 65%);
+      pointer-events: none; border-radius: 20px;
+    }
+
+    /* Number watermark */
+    .ch-exp-card .card-number {
+      position: absolute; top: 0.8rem; right: 1.2rem; z-index: 2;
+      font-family: var(--font-display); font-size: 5rem;
+      color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none;
+      transition: color 0.5s;
+    }
+    .ch-exp-card.ch-active .card-number { color: rgba(255,255,255,0.07); }
+
+    /* Market tag */
+    .ch-exp-card .card-market {
+      position: absolute; top: 1rem; left: 1rem; z-index: 3;
       font-family: var(--font-mono); font-size: 0.5rem;
       letter-spacing: 0.25em; font-weight: 700;
-      padding: 0.25rem 0.7rem; border-radius: 3px; z-index: 3;
+      padding: 0.25rem 0.7rem; border-radius: 3px;
+      opacity: 0; transition: opacity 0.3s 0.15s;
     }
-    .channel-card-v2 .card-number {
-      position: absolute; top: 0.5rem; right: 1.5rem;
-      font-family: var(--font-display); font-size: 7rem;
-      color: rgba(255,255,255,0.025); line-height: 1;
-      z-index: 1; pointer-events: none;
+    .ch-exp-card.ch-active .card-market { opacity: 1; }
+
+    /* Collapsed state — name left vertical, socials right vertical */
+    .ch-exp-card .ch-collapsed-info {
+      position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 3;
+      display: flex; flex-direction: row; align-items: stretch;
+      justify-content: space-between;
+      padding: 1rem 0.5rem;
+      opacity: 1; transition: opacity 0.2s 0.1s;
+      pointer-events: none;
     }
-    .channel-card-v2 .card-flag { font-size: 1.4rem; margin-bottom: 0.3rem; display: block; }
-    .channel-card-v2 .card-name {
-      font-family: var(--font-display); font-size: 1.8rem;
-      letter-spacing: 0.04em; line-height: 1;
-      margin-bottom: 0.35rem;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    .ch-exp-card.ch-active .ch-collapsed-info { opacity: 0; transition: opacity 0.15s; }
+    .ch-exp-card .ch-collapsed-name {
+      writing-mode: vertical-lr; text-orientation: mixed;
+      transform: rotate(180deg);
+      font-family: var(--font-display); font-size: 1.3rem;
+      letter-spacing: 0.15em; color: var(--zv-white);
+      white-space: nowrap;
+      display: flex; align-items: center;
     }
-    .channel-card-v2 .card-genre {
-      font-family: var(--font-mono); font-size: 0.5rem;
-      letter-spacing: 0.2em; color: var(--zv-cyan);
-      opacity: 0.7;
+    .ch-exp-card .ch-collapsed-socials {
+      display: flex; flex-direction: column; gap: 5px;
+      justify-content: flex-end;
+    }
+    .ch-exp-card .ch-collapsed-socials a {
+      display: flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-decoration: none;
+    }
+    .ch-exp-card .ch-collapsed-socials a svg {
+      width: 11px; height: 11px; opacity: 0.5;
     }
 
-    /* Platform icons — always visible, subtle, pro layout */
-    .channel-card-v2 .card-platforms {
-      display: flex; gap: 6px;
-      padding-top: 0.7rem;
-      opacity: 0.5;
-      transition: opacity 0.3s;
+    /* Expanded content — only visible when active */
+    .ch-exp-card .card-glass {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      padding: 2rem 1.8rem;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.4s 0.15s, transform 0.4s 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
     }
-    .channel-card-v2:hover .card-platforms {
-      opacity: 1;
+    .ch-exp-card.ch-active .card-glass {
+      opacity: 1; transform: translateY(0);
+      pointer-events: auto;
     }
-    .channel-card-v2 .card-platforms a {
+
+    .ch-exp-card .card-flag { font-size: 1.4rem; margin-bottom: 0.3rem; display: block; }
+    .ch-exp-card .card-name {
+      font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.4rem);
+      letter-spacing: 0.04em; line-height: 1; margin-bottom: 0.4rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    }
+    .ch-exp-card .card-genre {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.2em; color: var(--zv-cyan); opacity: 0.8;
+      margin-bottom: 0.8rem; display: block;
+    }
+
+    /* Platform icons */
+    .ch-exp-card .card-platforms {
+      display: flex; gap: 6px; padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .ch-exp-card .card-platforms a {
       display: flex; align-items: center; justify-content: center;
-      width: 28px; height: 28px; border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.06);
+      width: 32px; height: 32px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       text-decoration: none;
-      background: rgba(255,255,255,0.04);
     }
-    .channel-card-v2 .card-platforms a svg {
-      width: 13px; height: 13px;
-      opacity: 0.45;
-      filter: saturate(0) brightness(2);
+    .ch-exp-card .card-platforms a svg {
+      width: 14px; height: 14px; opacity: 0.6;
+      filter: saturate(0.3) brightness(1.8);
       transition: opacity 0.3s, filter 0.3s;
     }
-    .channel-card-v2:hover .card-platforms a svg {
-      opacity: 0.7;
-      filter: saturate(0.4) brightness(1.6);
+    .ch-exp-card .card-platforms a:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
     }
-    .channel-card-v2 .card-platforms a:hover svg {
-      opacity: 1;
-      filter: saturate(1) brightness(1);
+    .ch-exp-card .card-platforms a:hover svg {
+      opacity: 1; filter: saturate(1) brightness(1);
     }
-    .channel-card-v2 .card-platforms a:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.15);
+
+    /* Accent bar bottom */
+    .ch-exp-card .ch-accent-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px; z-index: 4;
+      background: linear-gradient(90deg, var(--zv-cyan), var(--zv-magenta));
+      transform: scaleX(0); transform-origin: left; border-radius: 0 0 20px 20px;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
     }
-    /* Stagger delay for entrance */
-    .channel-card-v2 .card-platforms a:nth-child(1) { transition-delay: 0s; }
-    .channel-card-v2 .card-platforms a:nth-child(2) { transition-delay: 0.03s; }
-    .channel-card-v2 .card-platforms a:nth-child(3) { transition-delay: 0.06s; }
-    .channel-card-v2 .card-platforms a:nth-child(4) { transition-delay: 0.09s; }
-    .channel-card-v2 .card-platforms a:nth-child(5) { transition-delay: 0.12s; }
+    .ch-exp-card.ch-active .ch-accent-bar { transform: scaleX(1); }
+    /* Channels scroll nav — hidden now but kept for fallback */
+    .channels-scroll-wrapper { display: none; }
 
     /* Glow line bottom */
     .channel-card-v2 .card-inner::after {
@@ -1400,19 +1555,26 @@
       .channel-platforms { opacity: 1; transform: translateY(0); }
       .channel-platform-icon { width: 28px; height: 28px; }
 
-      /* V2 Channels */
+      /* V2 Channels — Expandable cards mobile */
       .channels-section-v2 { padding: 3rem 0 3rem; }
-      .channel-card-v2 { flex: 0 0 260px; height: 400px; }
-      .channel-card-v2 .card-name { font-size: 1.5rem; }
-      .channel-card-v2 .card-number { font-size: 4rem; }
-      .channel-card-v2 .card-flag { font-size: 1.3rem; }
-      .channel-card-v2 .card-platforms { opacity: 1; transform: translateY(0); }
-      .channel-card-v2 .card-platforms a { width: 26px; height: 26px; border-radius: 5px; }
-      .channel-card-v2 .card-platforms a svg { width: 11px; height: 11px; }
-      .channel-card-v2 .card-info-zone { padding: 1.5rem 1.2rem 0.6rem; }
-      .channel-card-v2 .card-platform-zone { padding: 0 1.2rem 1rem; }
-      .channel-card-v2 .card-name { font-size: 1.4rem; }
-      .channels-scroll { padding: 0.5rem 1rem 1.5rem; gap: 1rem; }
+      .channels-expand-row {
+        flex-direction: column; height: auto; padding: 0 1rem;
+        border-radius: 16px;
+      }
+      .ch-exp-card {
+        min-height: 120px; border-radius: 14px; margin: 2px 0;
+        transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), flex 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .ch-exp-card.ch-active { flex: none; min-height: 360px; }
+      .ch-exp-card:not(.ch-active) { flex: none; min-height: 90px; }
+      .ch-exp-card .ch-collapsed-info {
+        padding: 0.6rem 0.8rem;
+      }
+      .ch-exp-card .ch-collapsed-name { font-size: 0.9rem; }
+      .ch-exp-card .card-glass { padding: 1.2rem; }
+      .ch-exp-card .card-name { font-size: 1.4rem; }
+      .ch-exp-card .card-number { font-size: 3rem; }
+      .ch-exp-card .card-platforms a { width: 28px; height: 28px; }
 
       /* Marquees */
       .marquee-track span { font-size: 0.8rem; padding: 0 1rem; }
@@ -1421,26 +1583,30 @@
       /* Orbs smaller on mobile */
       .glow-orb { filter: blur(80px); opacity: 0.1; }
 
-      /* ARTISTAS */
+      /* ARTISTAS — EXPANDABLE CARDS MOBILE */
       .s-artistas { padding: 4rem 0; }
       .s-artistas .section-header { padding: 0 1.25rem; margin-bottom: 2rem; }
-      .artist-featured { height: 60vh; min-height: 320px; }
-      .artist-featured-content { padding: 1.5rem; }
-      .artist-featured-name { font-size: clamp(2rem, 10vw, 3rem); }
-      .artist-featured-bio { font-size: 0.85rem; }
-      .artist-featured-tag { font-size: 0.5rem; }
-      .artist-featured-number { font-size: clamp(4rem, 20vw, 7rem); top: 1rem; right: 1.5rem; }
-      .artist-featured-links a { width: 40px; height: 40px; }
-      .artists-row { flex-direction: column; }
-      .artist-row-card {
-        min-height: 240px; border-right: none;
-        border-bottom: 1px solid var(--zv-border);
+      .expandable-cards {
+        flex-direction: column; height: auto; min-height: auto;
       }
-      .artist-row-card:hover { flex: 1; }
-      .artist-row-content { padding: 1.25rem; }
-      .artist-row-name { font-size: 1.5rem; }
-      .artist-row-bio { opacity: 1; max-height: 60px; font-size: 0.75rem; }
-      .artist-row-num { font-size: 2rem; top: 1rem; left: 1rem; }
+      .exp-card {
+        min-height: 200px; border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), flex 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .exp-card.active { flex: none; min-height: 400px; }
+      .exp-card:not(.active) { flex: none; min-height: 120px; }
+      .exp-card-label {
+        transform: translateX(-50%) rotate(0deg);
+        bottom: auto; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+      }
+      .exp-card-content { padding: 1.5rem; }
+      .exp-card-name { font-size: clamp(2rem, 8vw, 3rem); }
+      .exp-card-bio { font-size: 0.8rem; }
+      .exp-card-links a { width: 38px; height: 38px; }
+      .exp-card-num { font-size: 2.5rem; top: 1rem; left: 1rem; }
 
       /* LANZAMIENTOS */
       .s-lanzamientos { padding: 4rem 0; overflow: hidden; }
@@ -1671,36 +1837,24 @@
       </p>
     </div>
   </div>
+</section>
 
-  <!-- Channels V2 — Horizontal Scroll Cinematic -->
+<div class="bg-juanito-wrap">
+  <!-- Channels / Global Talent — Expandable Cards -->
   <div class="channels-section-v2" id="channelsSection">
     <div class="channels-header-v2">
       <p data-i18n="channels.label">OUR CHANNELS</p>
       <h3 class="text-reveal-target" data-i18n="channels.title">Global <span class="text-cyan">Talent</span></h3>
     </div>
-    <div class="channels-scroll-wrapper">
-      <div class="channels-scroll" id="channelsScroll"></div>
-      <div class="channels-scroll-nav">
-        <button class="ch-scroll-btn" onclick="scrollChannels(-1)" aria-label="Scroll left">‹</button>
-        <div class="ch-scroll-dots" id="chScrollDots"></div>
-        <button class="ch-scroll-btn" onclick="scrollChannels(1)" aria-label="Scroll right">›</button>
-      </div>
-    </div>
+    <div class="channels-expand-row" id="channelsExpandRow"></div>
   </div>
 
   <!-- Keep old grid hidden for fallback -->
   <div class="channels-section" id="channelsSectionOld" style="display:none;">
     <div class="channels-grid" id="channelsGrid"></div>
   </div>
-</section>
 
-<!-- ═══ MARQUEE 2 — Between Studio & Artists ═══ -->
-<div class="marquee-ticker magenta reverse">
-  <div class="marquee-track" id="marquee2"></div>
-</div>
-<div class="section-glow-line"></div>
-
-<!-- ======= ARTISTAS ======= -->
+<!-- ======= ARTISTAS — EXPANDABLE CARDS ======= -->
 <section id="artistas" class="s-artistas" style="position:relative;overflow:hidden;">
   <!-- Floating orbs -->
   <div class="glow-orbs">
@@ -1713,50 +1867,76 @@
     <h2 class="section-title text-reveal-target" data-i18n="artists.title">Our <span class="text-cyan">Artists</span></h2>
   </div>
 
-  <!-- Featured Artist — Hero size -->
-  <div class="artist-featured" id="artistFeatured">
-    <img src="public/assets/frames/vid1_hd_05.jpg" alt="VELOZ" />
-    <span class="artist-featured-number">01</span>
-    <div class="artist-featured-content">
-      <span class="artist-featured-tag" data-i18n="artist.veloz.genre">REGGAETON · URBAN</span>
-      <h3 class="artist-featured-name">VELOZ</h3>
-      <p class="artist-featured-bio" data-i18n="artist.veloz.bio">The future of reggaeton with electronic beats that break boundaries.</p>
-      <div class="artist-featured-links">
-        <a href="#" title="Spotify">♫</a>
-        <a href="#" title="YouTube">▶</a>
-        <a href="#" title="TikTok">♪</a>
+  <div class="expandable-cards" id="expandableCards">
+    <!-- Card 1 — VELOZ -->
+    <div class="exp-card active" data-card="1">
+      <img class="exp-card-img" src="public/assets/frames/vid1_hd_05.jpg" alt="VELOZ" />
+      <span class="exp-card-num">01</span>
+      <span class="exp-card-label">VELOZ</span>
+      <div class="exp-card-content">
+        <span class="exp-card-genre" data-i18n="artist.veloz.genre">REGGAETON · URBAN</span>
+        <h3 class="exp-card-name">VELOZ</h3>
+        <p class="exp-card-bio" data-i18n="artist.veloz.bio">The future of reggaeton with electronic beats that break boundaries.</p>
+        <div class="exp-card-links">
+          <a href="#" title="Spotify">♫</a>
+          <a href="#" title="YouTube">▶</a>
+          <a href="#" title="TikTok">♪</a>
+        </div>
       </div>
+      <div class="exp-card-accent"></div>
     </div>
-  </div>
 
-  <!-- Expanding Row — hover to expand -->
-  <div class="artists-row" id="artistsRow">
-    <div class="artist-row-card">
-      <img src="public/assets/frames/vid2_hd_06.jpg" alt="LUNA ROJA" />
-      <span class="artist-row-num">02</span>
-      <div class="artist-row-content">
-        <span class="artist-row-genre" data-i18n="artist.luna.genre">TRAP · ALTERNATIVE</span>
-        <h3 class="artist-row-name">LUNA ROJA</h3>
-        <p class="artist-row-bio" data-i18n="artist.luna.bio">Trap with soul, raw lyrics and beats that hit the heart.</p>
+    <!-- Card 2 — LUNA ROJA -->
+    <div class="exp-card" data-card="2">
+      <img class="exp-card-img" src="public/assets/frames/vid2_hd_06.jpg" alt="LUNA ROJA" />
+      <span class="exp-card-num">02</span>
+      <span class="exp-card-label">LUNA ROJA</span>
+      <div class="exp-card-content">
+        <span class="exp-card-genre" data-i18n="artist.luna.genre">TRAP · ALTERNATIVE</span>
+        <h3 class="exp-card-name">LUNA ROJA</h3>
+        <p class="exp-card-bio" data-i18n="artist.luna.bio">Trap with soul, raw lyrics and beats that hit the heart.</p>
+        <div class="exp-card-links">
+          <a href="#" title="Spotify">♫</a>
+          <a href="#" title="YouTube">▶</a>
+          <a href="#" title="Instagram">✦</a>
+        </div>
       </div>
+      <div class="exp-card-accent"></div>
     </div>
-    <div class="artist-row-card">
-      <img src="public/assets/frames/vid3_hd_06.jpg" alt="NOVA" />
-      <span class="artist-row-num">03</span>
-      <div class="artist-row-content">
-        <span class="artist-row-genre" data-i18n="artist.nova.genre">LATIN POP · R&B</span>
-        <h3 class="artist-row-name">NOVA</h3>
-        <p class="artist-row-bio" data-i18n="artist.nova.bio">The voice of modern latin pop you can't get out of your head.</p>
+
+    <!-- Card 3 — NOVA -->
+    <div class="exp-card" data-card="3">
+      <img class="exp-card-img" src="public/assets/frames/vid3_hd_06.jpg" alt="NOVA" />
+      <span class="exp-card-num">03</span>
+      <span class="exp-card-label">NOVA</span>
+      <div class="exp-card-content">
+        <span class="exp-card-genre" data-i18n="artist.nova.genre">LATIN POP · R&B</span>
+        <h3 class="exp-card-name">NOVA</h3>
+        <p class="exp-card-bio" data-i18n="artist.nova.bio">The voice of modern latin pop you can't get out of your head.</p>
+        <div class="exp-card-links">
+          <a href="#" title="Spotify">♫</a>
+          <a href="#" title="Apple Music">♬</a>
+          <a href="#" title="TikTok">♪</a>
+        </div>
       </div>
+      <div class="exp-card-accent"></div>
     </div>
-    <div class="artist-row-card">
-      <img src="public/assets/frames/vid1_hd_09.jpg" alt="TORMENTA" />
-      <span class="artist-row-num">04</span>
-      <div class="artist-row-content">
-        <span class="artist-row-genre">CORRIDOS · REGIONAL</span>
-        <h3 class="artist-row-name">TORMENTA</h3>
-        <p class="artist-row-bio">Corridos tumbados del futuro que golpean el alma.</p>
+
+    <!-- Card 4 — TORMENTA -->
+    <div class="exp-card" data-card="4">
+      <img class="exp-card-img" src="public/assets/frames/vid1_hd_09.jpg" alt="TORMENTA" />
+      <span class="exp-card-num">04</span>
+      <span class="exp-card-label">TORMENTA</span>
+      <div class="exp-card-content">
+        <span class="exp-card-genre">CORRIDOS · REGIONAL</span>
+        <h3 class="exp-card-name">TORMENTA</h3>
+        <p class="exp-card-bio">Corridos tumbados del futuro que golpean el alma.</p>
+        <div class="exp-card-links">
+          <a href="#" title="Spotify">♫</a>
+          <a href="#" title="YouTube">▶</a>
+        </div>
       </div>
+      <div class="exp-card-accent"></div>
     </div>
   </div>
 </section>
@@ -1951,6 +2131,40 @@
   </div>
 </div>
 
+
+<!-- ═══ MARQUEE 4 — Before Footer ═══ -->
+<div class="marquee-ticker cyan reverse fast">
+  <div class="marquee-track" id="marquee4"></div>
+</div>
+
+<!-- ======= FOOTER ======= -->
+<footer class="site-footer">
+  <div class="footer-vinyl">
+    <img src="public/assets/frames/vinyl_crop.jpg" alt="ZV Records" />
+  </div>
+  <div class="footer-brand">
+    <div class="footer-logo">
+      <span class="logo-z">Z</span><span class="logo-v">V</span>
+    </div>
+    <p class="footer-sub" data-i18n="footer.sub">PRODUCTION CO. · RECORDS · EST. 2024</p>
+  </div>
+  <div class="footer-links">
+    <a href="#hero" data-i18n="footer.home">Home</a>
+    <a href="#studio" data-i18n="nav.studio">Studio</a>
+    <a href="#artistas" data-i18n="nav.artists">Artists</a>
+    <a href="#lanzamientos" data-i18n="nav.releases">Releases</a>
+    <a href="#videos" data-i18n="nav.videos">Videos</a>
+  </div>
+  <div class="footer-social">
+    <a href="#" class="social-link">Instagram</a>
+    <a href="#" class="social-link">TikTok</a>
+    <a href="#" class="social-link">YouTube</a>
+    <a href="#" class="social-link">Spotify</a>
+  </div>
+  <p class="footer-copy" data-i18n="footer.copy">© 2024 ZV Production Co. Records. All rights reserved.</p>
+</footer>
+</div><!-- /.bg-juanito-wrap -->
+
 <!-- ======= NEW RELEASE POPUP ======= -->
 <div class="nr-backdrop" id="nrBackdrop" onclick="closeNewRelease()">
   <div class="nr-popup" id="nrPopup" onclick="event.stopPropagation()">
@@ -1984,38 +2198,6 @@
     </div>
   </div>
 </div>
-
-<!-- ═══ MARQUEE 4 — Before Footer ═══ -->
-<div class="marquee-ticker cyan reverse fast">
-  <div class="marquee-track" id="marquee4"></div>
-</div>
-
-<!-- ======= FOOTER ======= -->
-<footer class="site-footer">
-  <div class="footer-vinyl">
-    <img src="public/assets/frames/vinyl_crop.jpg" alt="ZV Records" />
-  </div>
-  <div class="footer-brand">
-    <div class="footer-logo">
-      <span class="logo-z">Z</span><span class="logo-v">V</span>
-    </div>
-    <p class="footer-sub" data-i18n="footer.sub">PRODUCTION CO. · RECORDS · EST. 2024</p>
-  </div>
-  <div class="footer-links">
-    <a href="#hero" data-i18n="footer.home">Home</a>
-    <a href="#studio" data-i18n="nav.studio">Studio</a>
-    <a href="#artistas" data-i18n="nav.artists">Artists</a>
-    <a href="#lanzamientos" data-i18n="nav.releases">Releases</a>
-    <a href="#videos" data-i18n="nav.videos">Videos</a>
-  </div>
-  <div class="footer-social">
-    <a href="#" class="social-link">Instagram</a>
-    <a href="#" class="social-link">TikTok</a>
-    <a href="#" class="social-link">YouTube</a>
-    <a href="#" class="social-link">Spotify</a>
-  </div>
-  <p class="footer-copy" data-i18n="footer.copy">© 2024 ZV Production Co. Records. All rights reserved.</p>
-</footer>
 
 <script>
 // ======= DYNAMIC DATA LOADER — Fetches from API and renders all sections =======
@@ -2062,50 +2244,67 @@ const CH_PLATFORM_CFG = [
 const CH_FALLBACK_IMGS = ['vid1_hd_02.jpg','vid2_hd_02.jpg','vid3_hd_02.jpg','vid1_hd_04.jpg','vid2_hd_04.jpg','vid3_hd_04.jpg','vid1_hd_08.jpg','vid2_hd_08.jpg'];
 
 function renderChannels(artists) {
-  const scroll = document.getElementById('channelsScroll');
-  if (!scroll) return;
+  const container = document.getElementById('channelsExpandRow');
+  if (!container) return;
   const activeArtists = artists.filter(a => a.active);
   if (!activeArtists.length) return;
 
-  scroll.innerHTML = activeArtists.map((a, i) => {
+  container.innerHTML = activeArtists.map((a, i) => {
     const img = a.image || `public/assets/frames/${CH_FALLBACK_IMGS[i % CH_FALLBACK_IMGS.length]}`;
     const market = a.market || 'LATIN';
     const tag = CH_MARKET_TAG[market] || { bg: 'var(--zv-cyan)', text: '#000' };
     const num = String(i + 1).padStart(2, '0');
+    const isFirst = i === 0 ? ' ch-active' : '';
 
     const platforms = CH_PLATFORM_CFG
       .filter(p => a[p.key])
-      .map(p => `<a href="${a[p.key]}" target="_blank" rel="noopener" title="${p.label}" data-color="${p.color}" onmouseover="this.style.boxShadow='0 0 14px ${p.color}30';this.style.borderColor='${p.color}40'" onmouseout="this.style.boxShadow='none';this.style.borderColor='rgba(255,255,255,0.08)'">${p.svg}</a>`)
+      .map(p => `<a href="${a[p.key]}" target="_blank" rel="noopener" title="${p.label}">${p.svg}</a>`)
+      .join('');
+
+    // Small icons for collapsed state
+    const smallIcons = CH_PLATFORM_CFG
+      .filter(p => a[p.key])
+      .slice(0, 3)
+      .map(p => `<a href="${a[p.key]}" target="_blank" rel="noopener" title="${p.label}">${p.svg}</a>`)
       .join('');
 
     return `
-    <article class="channel-card-v2" data-idx="${i}" onmouseenter="tilt3DEnter(this)" onmousemove="tilt3DMove(event,this)" onmouseleave="tilt3DLeave(this)">
-      <div class="card-inner">
-        <img src="${img}" alt="${a.name}" class="card-bg" loading="lazy" />
-        <span class="card-market" style="background:${tag.bg};color:${tag.text};">${market}</span>
-        <span class="card-number">${num}</span>
-        <div class="card-glass">
-          <div class="card-info-zone">
-            <span class="card-flag">${a.flag || '🇲🇽'}</span>
-            <h4 class="card-name">${a.name}</h4>
-            <span class="card-genre">${a.genre || ''}</span>
-          </div>
-          ${platforms ? `<div class="card-platform-zone"><div class="card-platforms">${platforms}</div></div>` : ''}
-        </div>
+    <article class="ch-exp-card${isFirst}" data-idx="${i}">
+      <img src="${img}" alt="${a.name}" class="card-bg" loading="lazy" />
+      <span class="card-market" style="background:${tag.bg};color:${tag.text};">${market}</span>
+      <span class="card-number">${num}</span>
+      <div class="ch-collapsed-info">
+        <span class="ch-collapsed-name">${a.name}</span>
+        <div class="ch-collapsed-socials">${smallIcons}</div>
       </div>
+      <div class="card-glass">
+        <span class="card-flag">${a.flag || '🇲🇽'}</span>
+        <h4 class="card-name">${a.name}</h4>
+        <span class="card-genre">${a.genre || ''}</span>
+        ${platforms ? `<div class="card-platforms">${platforms}</div>` : ''}
+      </div>
+      <div class="ch-accent-bar"></div>
     </article>`;
   }).join('');
 
-  // Build scroll dots
-  buildScrollDots(activeArtists.length);
-  // Init scroll observer + auto-scroll
-  initChannelScrollObserver();
-  initChannelAutoScroll();
-  // Apply 3D tilt for new cards
+  // Expandable card interaction
+  const cards = container.querySelectorAll('.ch-exp-card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      cards.forEach(c => c.classList.remove('ch-active'));
+      card.classList.add('ch-active');
+    });
+    card.addEventListener('click', () => {
+      cards.forEach(c => c.classList.remove('ch-active'));
+      card.classList.add('ch-active');
+    });
+  });
+
+  // GSAP entrance
   setTimeout(() => {
-    gsap.from('.channel-card-v2', {
-      opacity: 0, y: 60, scale: 0.92, rotateY: 8,
-      stagger: 0.08, duration: 0.8, ease: 'power3.out',
+    gsap.from('.ch-exp-card', {
+      opacity: 0, y: 50, scale: 0.95,
+      stagger: 0.1, duration: 0.8, ease: 'power3.out',
       scrollTrigger: { trigger: '#channelsSection', start: 'top 75%' }
     });
   }, 100);
@@ -2390,41 +2589,63 @@ function renderReleases(releases) {
   const featEl = document.getElementById('releaseFeatured');
   if (featEl && featured) {
     const cover = featured.cover || 'public/assets/frames/vid1_hd_03.jpg';
+    const type = (featured.type || 'single').toUpperCase();
+
+    const svgRew = '<svg viewBox="0 0 24 24"><path d="M11 16.07V7.93c0-.81-.91-1.28-1.58-.82l-5.77 4.07c-.56.4-.56 1.24 0 1.63l5.77 4.07c.67.47 1.58 0 1.58-.81zm1.58-.82l5.77 4.07c.67.47 1.58 0 1.58-.81V7.93c0-.81-.91-1.28-1.58-.82l-5.77 4.07c-.56.4-.56 1.24 0 1.63z"/></svg>';
+    const svgPlay = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    const svgFwd = '<svg viewBox="0 0 24 24"><path d="M13 7.93v8.14c0 .81.91 1.28 1.58.82l5.77-4.07c.56-.4.56-1.24 0-1.63l-5.77-4.07C13.91 6.65 13 7.12 13 7.93zm-1.58.82L5.65 4.68C4.98 4.21 4.07 4.68 4.07 5.49v8.14c0 .81.91 1.28 1.58.82l5.77-4.07c.56-.4.56-1.24 0-1.63z"/></svg>';
+    const svgStop = '<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>';
+    const svgPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
     featEl.innerHTML = `
-      <img src="${cover}" alt="${featured.title}" class="release-featured-bg" id="relFeatBg" />
-      <div class="release-featured-overlay"></div>
-      <span class="release-featured-number">01</span>
-      <div class="release-featured-content">
-        <div class="release-featured-cover">
-          <img src="${cover}" alt="${featured.title}" />
-          <div class="release-featured-playing">
-            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-          </div>
+      <div class="wk-screw tl"></div><div class="wk-screw tr"></div>
+      <div class="wk-screw bl"></div><div class="wk-screw br"></div>
+
+      <div class="wk-brand">
+        <div>
+          <span class="wk-brand-name">ZV RECORDS</span>
+          <span class="wk-brand-model">ZV-3500</span>
         </div>
-        <div class="release-featured-info">
-          <span class="release-featured-badge">${(featured.type || 'single').toUpperCase()}</span>
-          <h3 class="release-featured-title">${featured.title}</h3>
-          <span class="release-featured-artist">${featured.artist?.name || ''}</span>
-          <span class="release-featured-date">${formatReleaseDate(featured.date)}</span>
-          <div class="release-featured-platforms">
-            ${featured.spotify ? `<a href="${featured.spotify}" target="_blank" class="platform-btn primary">${PLATFORM_SVGS.spotify} Spotify</a>` : ''}
-            ${featured.appleMusic ? `<a href="${featured.appleMusic}" target="_blank" class="platform-btn">${PLATFORM_SVGS.appleMusic} Apple Music</a>` : ''}
-            ${featured.youtubeMusic ? `<a href="${featured.youtubeMusic}" target="_blank" class="platform-btn">${PLATFORM_SVGS.youtube} YouTube</a>` : ''}
-          </div>
+        <span class="wk-brand-badge">${type}</span>
+      </div>
+
+      <div class="wk-cassette">
+        <div class="wk-reels">
+          <div class="wk-reel"></div>
+          <div class="wk-cover"><img src="${cover}" alt="${featured.title}" /></div>
+          <div class="wk-reel"></div>
+          <div class="wk-tape-band"></div>
+        </div>
+        <div class="wk-label">
+          <h3 class="wk-label-title">${featured.title}</h3>
+          <p class="wk-label-artist">${featured.artist?.name || ''}</p>
+          <div class="wk-label-lines"><span></span><span></span><span></span></div>
         </div>
       </div>
-    `;
 
-    // Parallax on featured bg
-    setTimeout(() => {
-      const bg = document.getElementById('relFeatBg');
-      if (bg && typeof gsap !== 'undefined') {
-        gsap.to(bg, {
-          yPercent: 12, scale: 1.08, ease: 'none',
-          scrollTrigger: { trigger: featEl, start: 'top bottom', end: 'bottom top', scrub: 0.5 }
-        });
-      }
-    }, 200);
+      <div class="wk-info">
+        <span class="wk-info-date">${formatReleaseDate(featured.date)}</span>
+      </div>
+
+      <div class="wk-controls">
+        <a href="#" class="wk-btn" title="Rewind">${svgRew}</a>
+        <a href="#" class="wk-btn wk-btn-stop" title="Stop">${svgStop}</a>
+        <div class="wk-btn-divider"></div>
+        <a href="${featured.spotify || '#'}" target="_blank" class="wk-btn wk-btn-play" title="Play">${svgPlay}</a>
+        <div class="wk-btn-divider"></div>
+        <a href="#" class="wk-btn" title="Pause">${svgPause}</a>
+        <a href="#" class="wk-btn" title="Forward">${svgFwd}</a>
+      </div>
+
+      <div class="wk-spotify-link">
+        <a href="${featured.spotify || '#'}" target="_blank">${PLATFORM_SVGS.spotify} LISTEN ON SPOTIFY</a>
+      </div>
+
+      <div class="wk-volume">
+        <span class="wk-volume-label">VOL</span>
+        <div class="wk-volume-bar"><div class="wk-volume-fill"></div></div>
+      </div>
+    `;
   }
 
   // Grid releases — vertical cards with cover prominent
@@ -2689,50 +2910,46 @@ window.addEventListener('load', () => {
 
   // --- CHANNELS V2: Scroll-triggered entrance (handled in renderChannels) ---
 
-  // --- ARTISTAS: Featured with parallax ---
-  const featImg = document.querySelector('.artist-featured img');
-  if (featImg) {
-    gsap.to(featImg, {
-      yPercent: 12, scale: 1.05,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.artist-featured',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 0.5,
+  // --- ARTISTAS: Expandable Cards ---
+  const expCards = document.querySelectorAll('.exp-card');
+  const expContainer = document.getElementById('expandableCards');
+
+  if (expContainer) {
+    // Hover/click to expand
+    expCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        expCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+      card.addEventListener('click', () => {
+        expCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    // Scroll-triggered entrance
+    gsap.from('.exp-card', {
+      opacity: 0, y: 60,
+      stagger: 0.1, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#artistas', start: 'top 70%' }
+    });
+
+    // Parallax on card images
+    expCards.forEach(card => {
+      const img = card.querySelector('.exp-card-img');
+      if (img) {
+        gsap.to(img, {
+          yPercent: 10, ease: 'none',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.5,
+          }
+        });
       }
     });
   }
-
-  gsap.from('.artist-featured', {
-    opacity: 0, scale: 1.05,
-    duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: '#artistas', start: 'top 70%' }
-  });
-  gsap.from('.artist-featured-content > *', {
-    opacity: 0, y: 30,
-    stagger: 0.1, duration: 0.8, ease: 'power3.out',
-    scrollTrigger: { trigger: '.artist-featured', start: 'top 60%' }
-  });
-  gsap.from('.artist-row-card', {
-    opacity: 0, y: 40,
-    stagger: 0.12, duration: 0.7, ease: 'power3.out',
-    scrollTrigger: { trigger: '.artists-row', start: 'top 80%' }
-  });
-
-  // --- Artist row images: Parallax ---
-  document.querySelectorAll('.artist-row-card img').forEach(img => {
-    gsap.to(img, {
-      yPercent: 10,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: img.closest('.artist-row-card'),
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 0.5,
-      }
-    });
-  });
 
   // --- RELEASES: Featured + grid + parallax ---
   const relCover = document.querySelector('.release-featured-cover img');

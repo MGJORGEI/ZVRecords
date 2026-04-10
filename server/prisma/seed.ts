@@ -166,7 +166,134 @@ async function main() {
     },
   });
 
-  console.log("✓ Artistas creados: VELOZ, LUNA ROJA, NOVA\n");
+  // Artista 4: SOMBRA
+  const sombra = await prisma.artist.create({
+    data: {
+      name: "SOMBRA",
+      slug: generateSlug("SOMBRA"),
+      genre: "Corridos / Regional",
+      bio: "La nueva cara de los corridos tumbados. Desde Sinaloa con letras que pegan y ritmos que no paran.",
+      bioEn: "The new face of corridos tumbados. From Sinaloa with hard-hitting lyrics and relentless rhythms.",
+      bioEs: "La nueva cara de los corridos tumbados. Desde Sinaloa con letras que pegan.",
+      bioJa: "コリードス・トゥンバドスの新しい顔。シナロアから心に響く歌詞とリズム。",
+      bioKo: "코리도스 툼바도스의 새로운 얼굴. 시날로아에서 강렬한 가사와 리듬으로.",
+      image: "",
+      flag: "🇲🇽",
+      market: "LATIN",
+      spotify: "https://open.spotify.com",
+      youtube: "https://youtube.com",
+      tiktok: "https://tiktok.com",
+      instagram: "https://instagram.com",
+      appleMusic: "https://music.apple.com",
+      featured: false,
+      order: 4,
+      active: true,
+    },
+  });
+
+  // Artista 5: YUKI
+  const yuki = await prisma.artist.create({
+    data: {
+      name: "YUKI",
+      slug: generateSlug("YUKI"),
+      genre: "J-Pop / City Pop",
+      bio: "City pop moderno desde Tokyo. YUKI fusiona nostalgia de los 80s con producción de vanguardia, conquistando Japón y el mundo.",
+      bioEn: "Modern city pop from Tokyo. YUKI fuses 80s nostalgia with cutting-edge production, conquering Japan and the world.",
+      bioEs: "City pop moderno desde Tokyo. Fusiona nostalgia de los 80s con producción de vanguardia.",
+      bioJa: "東京発のモダンシティポップ。80年代のノスタルジアと最先端のプロダクションを融合。",
+      bioKo: "도쿄에서 온 모던 시티팝. 80년대 향수와 최첨단 프로덕션을 융합합니다.",
+      image: "",
+      flag: "🇯🇵",
+      market: "J-POP",
+      spotify: "https://open.spotify.com",
+      youtube: "https://youtube.com",
+      instagram: "https://instagram.com",
+      appleMusic: "https://music.apple.com",
+      featured: false,
+      order: 5,
+      active: true,
+    },
+  });
+
+  // Artista 6: KWON
+  const kwon = await prisma.artist.create({
+    data: {
+      name: "KWON",
+      slug: generateSlug("KWON"),
+      genre: "K-Hip Hop / K-R&B",
+      bio: "Desde Seoul, KWON redefine el K-Hip Hop con flows que cruzan idiomas y fronteras. Bilingüe, bicultural, imparable.",
+      bioEn: "From Seoul, KWON redefines K-Hip Hop with flows that cross languages and borders. Bilingual, bicultural, unstoppable.",
+      bioEs: "Desde Seoul, redefine el K-Hip Hop con flows que cruzan idiomas y fronteras.",
+      bioJa: "ソウルからK-HipHopを再定義。言語と国境を越えるフロー。",
+      bioKo: "서울에서 K-힙합을 재정의합니다. 언어와 국경을 넘는 플로우. 바이링구얼, 바이컬처럴.",
+      image: "",
+      flag: "🇰🇷",
+      market: "K-POP",
+      spotify: "https://open.spotify.com",
+      youtube: "https://youtube.com",
+      tiktok: "https://tiktok.com",
+      instagram: "https://instagram.com",
+      appleMusic: "https://music.apple.com",
+      featured: false,
+      order: 6,
+      active: true,
+    },
+  });
+
+  // Artista 7: DRACO
+  const draco = await prisma.artist.create({
+    data: {
+      name: "DRACO",
+      slug: generateSlug("DRACO"),
+      genre: "Reggaeton / Dembow",
+      bio: "El sonido del caribe urbano. DRACO trae dembow y reggaeton con una energía que prende cualquier club desde Miami hasta Madrid.",
+      bioEn: "The sound of the urban Caribbean. DRACO brings dembow and reggaeton with energy that lights up any club from Miami to Madrid.",
+      bioEs: "El sonido del caribe urbano. Dembow y reggaeton con energía que prende cualquier club.",
+      bioJa: "アーバンカリビアンのサウンド。マイアミからマドリードまでクラブを熱くする。",
+      bioKo: "어반 카리브해의 사운드. 마이애미에서 마드리드까지 클럽을 뜨겁게 달구는 에너지.",
+      image: "",
+      flag: "🇵🇷",
+      market: "LATIN",
+      spotify: "https://open.spotify.com",
+      youtube: "https://youtube.com",
+      tiktok: "https://tiktok.com",
+      instagram: "https://instagram.com",
+      appleMusic: "https://music.apple.com",
+      featured: false,
+      order: 7,
+      active: true,
+    },
+  });
+
+  // Artista 8: AURA
+  const aura = await prisma.artist.create({
+    data: {
+      name: "AURA",
+      slug: generateSlug("AURA"),
+      genre: "Pop / Indie",
+      bio: "Pop con alma indie desde Los Ángeles. AURA escribe canciones que se quedan en tu cabeza y letras que se quedan en tu corazón.",
+      bioEn: "Pop with indie soul from Los Angeles. AURA writes songs that stick in your head and lyrics that stay in your heart.",
+      bioEs: "Pop con alma indie desde Los Ángeles. Canciones que se quedan en tu cabeza.",
+      bioJa: "LAからインディーソウルのポップ。頭から離れない曲と心に残る歌詞。",
+      bioKo: "LA에서 온 인디 소울 팝. 머릿속에 맴도는 노래와 마음에 남는 가사.",
+      image: "",
+      flag: "🇺🇸",
+      market: "USA",
+      spotify: "https://open.spotify.com",
+      youtube: "https://youtube.com",
+      tiktok: "https://tiktok.com",
+      instagram: "https://instagram.com",
+      appleMusic: "https://music.apple.com",
+      featured: false,
+      order: 8,
+      active: true,
+    },
+  });
+
+  console.log("✓ Artistas creados: VELOZ, LUNA ROJA, NOVA, SOMBRA, YUKI, KWON, DRACO, AURA\n");
+
+  // Supress unused variable warnings
+  void sombra; void yuki; void kwon; void draco; void aura;
 
   // ─── 5. Releases ─────────────────────────────────────────────────────────────
 
