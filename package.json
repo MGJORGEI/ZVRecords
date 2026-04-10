@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cd server && npx tsx src/index.ts",
+    "start": "cd server && npx tsx src/index.ts",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "next:dev": "next dev",
+    "lint": "eslint",
+    "db:push": "cd server && npx prisma db push",
+    "db:seed": "cd server && npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
